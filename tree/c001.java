@@ -220,7 +220,6 @@ public class l001{
 
        kDown(root.left,level-1,blockNode);
        kDown(root.right,level-1,blockNode);
-
     }
 
     public static void allNodeKAway(Node root, int target, int K) {
