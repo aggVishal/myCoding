@@ -432,7 +432,59 @@ public static void levelOrder_03(Node node){
     }
 }
 
+// views======================================================================================================
 
+public static void leftview(Node node){
+    LinkedList<Node> Que=new LinkedList<>(); // addLast and removeFirst.
+    Que.addLast(node);
+    
+    while(Que.size()!=0){
+        int size=Que.size();
+        System.out.print(Que.getFirst().data+" ");
+        while(size-->0){          
+            Node rnode=Que.removeFirst();
+            if(rnode.left!=null) Que.addLast(rnode.left);
+            if(rnode.right!=null) Que.addLast(rnode.right);
+        }
+    }
+}
+
+public static void rightview(Node node){
+    LinkedList<Node> Que=new LinkedList<>(); // addLast and removeFirst.
+    Que.addLast(node);
+    
+    while(Que.size()!=0){
+        int size=Que.size();
+        Node prev=null;
+        while(size-->0){          
+            Node rnode=Que.removeFirst();
+            if(rnode.left!=null) Que.addLast(rnode.left);
+            if(rnode.right!=null) Que.addLast(rnode.right);
+            prev=rnode;
+        }
+        System.out.print(prev.data+" ");
+
+    }
+}
+
+public static void sideprint(Node node){
+    LinkedList<Node> que=new LinkedList<>(); // addLast and removeFirst.
+    que.addLast(node);
+    while(que.size()!=0){
+        int size=que.size();
+        while(size-->0){          
+            Node rnode=que.removeFirst();
+            if(rnode.left!=null) que.addLast(rnode.left);
+            if(rnode.right!=null) que.addLast(rnode.right);
+        }
+    }
+
+}
+
+public static void views(Node node){
+    // leftview(node);
+    rightview(node);
+}
 
    public static void levelOrder(Node node){
     // levelOrder_00(node);
@@ -464,5 +516,6 @@ public static void levelOrder_03(Node node){
        display(root);
     //    set1(root);
        levelOrder(root);
+       views(root);
    }
 }
