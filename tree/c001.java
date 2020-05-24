@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-public class l001{
+public class c001{
 
     public static void main(String[] args){
         solve();
@@ -220,6 +220,7 @@ public class l001{
 
        kDown(root.left,level-1,blockNode);
        kDown(root.right,level-1,blockNode);
+
     }
 
     public static void allNodeKAway(Node root, int target, int K) {
