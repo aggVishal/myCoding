@@ -466,24 +466,110 @@ public static void rightview(Node node){
 
     }
 }
+static int leftmost=0;
+static int rightmost=0;
 
-public static void sideprint(Node node){
-    LinkedList<Node> que=new LinkedList<>(); // addLast and removeFirst.
-    que.addLast(node);
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-->0){          
-            Node rnode=que.removeFirst();
-            if(rnode.left!=null) que.addLast(rnode.left);
-            if(rnode.right!=null) que.addLast(rnode.right);
-        }
+public static void width(Node node,int lev){
+    if(node==null) return;
+
+    leftmost=Math.min(leftmost,lev);
+    rightmost=Math.max(rightmost,lev);
+
+    width(node.left,lev-1);
+    width(node.right,lev+1);
+}
+
+public static class pair{
+    Node n;
+    int level=0;
+    public pair(Node n,int level){
+        this.level=level;
+        this.n=n;
+    }
+}
+
+public static void verticalorder(Node node){
+    width(node,0);
+    ArrayList<ArrayList<Integer>> ans=new ArrayList<>();
+    int n=rightmost-leftmost+1;
+    for(int i=0;i<n;i++){
+        ans.add(new ArrayList());
     }
 
+    LinkedList<pair> que=new LinkedList();
+    pair p=new pair(node,-leftmost);
+    que.addLast(p);
+
+    while(que.size()!=0){
+        int size=que.size();
+        while(size-->0){
+            pair idx=que.removeFirst();
+            ans.get(idx.level).add(idx.n.data);
+            if(idx.n.left!=null) que.addLast(new pair(idx.n.left,idx.level-1));
+            if(idx.n.right!=null) que.addLast(new pair(idx.n.right,idx.level+1));            
+        }
+    }
+    for(ArrayList<Integer> ar:ans){
+        System.out.print(ar+" ");
+        
+    System.out.println();
+    }
 }
+
+
+
+// static int leftMinValue=0;
+// static int rightMaxValue=0;
+
+// public static void width(Node node,int lev){
+//     if(node==null) return;
+
+//     leftMinValue=Math.min(leftMinValue,lev);
+//     rightMaxValue=Math.max(rightMaxValue,lev);
+    
+//     width(node.left, lev - 1);
+//     width(node.right, lev + 1);
+// } 
+
+// public static class pairVO{
+//     Node node;  //actual Node
+//     int vl=0;  // vertical Level
+//     public pairVO(Node node,int vl){
+//         this.node=node;
+//         this.vl=vl;
+//     }
+// }
+
+// public static void verticalOrder(Node node){
+//     width(node,0);
+//     int n=rightMaxValue - leftMinValue + 1;
+//     ArrayList<ArrayList<Integer>> ans=new ArrayList<>(); // vector<vector<int>> (n,vector<int>());
+//     for(int i=0;i<n;i++)
+//       ans.add(new ArrayList<>());
+   
+
+//     LinkedList<pairVO> que=new LinkedList<>();
+//     que.addLast(new pairVO(node,-leftMinValue));
+
+//     while(que.size()!=0){
+//         int size=que.size();
+//         while(size--> 0){
+//             pairVO rpair=que.removeFirst();
+//             ans.get(rpair.vl).add(rpair.node.data);
+//             if(rpair.node.left!=null) que.addLast(new pairVO(rpair.node.left, rpair.vl - 1));
+//             if(rpair.node.right!=null) que.addLast(new pairVO(rpair.node.right,rpair.vl + 1));    
+//         }
+//     }
+
+//     for(ArrayList<Integer> ar: ans)
+//        System.out.println(ar);
+//     System.out.println();
+// }
 
 public static void views(Node node){
     // leftview(node);
-    rightview(node);
+    // rightview(node);
+    verticalOrder(node);
 }
 
    public static void levelOrder(Node node){
@@ -510,12 +596,13 @@ public static void views(Node node){
    }
 
    public static void solve(){
-       int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
+    //    int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
+    int[] arr=   {11,6,4 ,-1, 5 ,-1, -1, 8, -1, 10, -1, -1, 19, 17, -1, -1, 43, 31, -1, -1, 49, -1, -1};
     //    int[] arr={10,20};
        Node root=constructTree(arr);
        display(root);
     //    set1(root);
-       levelOrder(root);
+    //    levelOrder(root);
        views(root);
    }
 }
