@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Arrays;
 public class c001{
 
     public static void main(String[] args){
@@ -411,228 +412,325 @@ public static void levelOrder_02(Node node){
     }
 }
 
-public static void levelOrder_03(Node node){    //MAIN
-    LinkedList<Node> Que=new LinkedList<>(); // addLast and removeFirst.
-
-    Que.addLast(node);
+public static void levelOrder_03(Node node){
+    LinkedList<Node> pQue=new LinkedList<>(); // addLast and removeFirst.
+    pQue.addLast(node);
+    
     int count=0;
-    
-    while(Que.size()!=0){
-        int size=Que.size();
+    while(pQue.size()!=0){
         System.out.print("Level: " + count + " -> ");
-        while(size-->0){          
-            Node rnode=Que.removeFirst();
-            System.out.print(rnode.data+ " ");
-
-            if(rnode.left!=null) Que.addLast(rnode.left);
-            if(rnode.right!=null) Que.addLast(rnode.right);
-        }
         count++;
-        System.out.println();        
+        int size=pQue.size();
+   
+        while(size--> 0){
+            Node rnode=pQue.removeFirst();
+            System.out.print(rnode.data+ " ");
+            if(rnode.left!=null) pQue.addLast(rnode.left);
+            if(rnode.right!=null) pQue.addLast(rnode.right);    
+        }
+        System.out.println();
     }
 }
 
-// views======================================================================================================
+//View=====================================================================
 
-public static void leftview(Node node){
-    LinkedList<Node> Que=new LinkedList<>(); // addLast and removeFirst.
-    Que.addLast(node);
-    
-    while(Que.size()!=0){
-        int size=Que.size();
-        System.out.print(Que.getFirst().data+" ");
-        while(size-->0){          
-            Node rnode=Que.removeFirst();
-            if(rnode.left!=null) Que.addLast(rnode.left);
-            if(rnode.right!=null) Que.addLast(rnode.right);
+public static void leftView(Node node){
+    LinkedList<Node> que=new LinkedList<>(); // addLast and removeFirst.
+    que.addLast(node);
+    while(que.size()!=0){
+        int size=que.size();
+        System.out.print(que.getFirst().data + " ");
+        while(size--> 0){
+            Node rnode=que.removeFirst();
+            if(rnode.left!=null) que.addLast(rnode.left);
+            if(rnode.right!=null) que.addLast(rnode.right);    
         }
     }
+    System.out.println();
 }
 
-public static void rightview(Node node){
-    LinkedList<Node> Que=new LinkedList<>(); // addLast and removeFirst.
-    Que.addLast(node);
-    
-    while(Que.size()!=0){
-        int size=Que.size();
+public static void rightView(Node node){
+    LinkedList<Node> que=new LinkedList<>(); // addLast and removeFirst.
+    que.addLast(node);
+    while(que.size()!=0){
+        int size=que.size();
         Node prev=null;
-        while(size-->0){          
-            Node rnode=Que.removeFirst();
-            if(rnode.left!=null) Que.addLast(rnode.left);
-            if(rnode.right!=null) Que.addLast(rnode.right);
+        while(size--> 0){
+            Node rnode=que.removeFirst();
+            if(rnode.left!=null) que.addLast(rnode.left);
+            if(rnode.right!=null) que.addLast(rnode.right);    
             prev=rnode;
         }
-        System.out.print(prev.data+" ");
-
+        System.out.print(prev.data + " ");
     }
+    System.out.println();
 }
-static int leftmost=0;
-static int rightmost=0;
+   static int leftMinValue=0;
+   static int rightMaxValue=0;
 
-public static void width(Node node,int lev){
+   public static void width(Node node,int lev){
+       if(node==null) return;
+
+       leftMinValue=Math.min(leftMinValue,lev);
+       rightMaxValue=Math.max(rightMaxValue,lev);
+       
+       width(node.left, lev - 1);
+       width(node.right, lev + 1);
+   } 
+
+   public static class pairVO{
+       Node node;  //actual Node
+       int vl=0;  // vertical Level
+       public pairVO(Node node,int vl){
+           this.node=node;
+           this.vl=vl;
+       }
+   }
+
+   public static void verticalOrder(Node node){
+       width(node,0);
+       int n=rightMaxValue - leftMinValue + 1;
+       ArrayList<ArrayList<Integer>> ans=new ArrayList<>(); // vector<vector<int>> (n,vector<int>());
+       for(int i=0;i<n;i++)
+         ans.add(new ArrayList<>());
+      
+
+       LinkedList<pairVO> que=new LinkedList<>();
+       que.addLast(new pairVO(node,-leftMinValue));
+
+       while(que.size()!=0){
+           int size=que.size();
+           while(size--> 0){
+               pairVO rpair=que.removeFirst();
+               ans.get(rpair.vl).add(rpair.node.data);
+               if(rpair.node.left!=null) que.addLast(new pairVO(rpair.node.left, rpair.vl - 1));
+               if(rpair.node.right!=null) que.addLast(new pairVO(rpair.node.right,rpair.vl + 1));    
+           }
+       }
+
+       for(ArrayList<Integer> ar: ans)
+          System.out.println(ar);
+       System.out.println();
+   }
+
+   public static void verticalOrderSum(Node node){
+    width(node,0);
+    int[] ans=new int[rightMaxValue - leftMinValue + 1];
+
+    LinkedList<pairVO> que=new LinkedList<>();
+    que.addLast(new pairVO(node,-leftMinValue));
+
+    while(que.size()!=0){
+        int size=que.size();
+        while(size--> 0){
+            pairVO rpair=que.removeFirst();
+            ans[rpair.vl] += rpair.node.data;
+            if(rpair.node.left!=null) que.addLast(new pairVO(rpair.node.left, rpair.vl - 1));
+            if(rpair.node.right!=null) que.addLast(new pairVO(rpair.node.right,rpair.vl + 1));    
+        }
+    }
+
+    for(int ele: ans)
+       System.out.println(ele);
+    System.out.println();
+}
+
+
+public static void bottomView(Node node){
+    width(node,0);
+    int[] ans=new int[rightMaxValue - leftMinValue + 1];
+
+    LinkedList<pairVO> que=new LinkedList<>();
+    que.addLast(new pairVO(node,-leftMinValue));
+
+    while(que.size()!=0){
+        int size=que.size();
+        while(size--> 0){
+            pairVO rpair=que.removeFirst();
+            ans[rpair.vl] = rpair.node.data;
+            if(rpair.node.left!=null) que.addLast(new pairVO(rpair.node.left, rpair.vl - 1));
+            if(rpair.node.right!=null) que.addLast(new pairVO(rpair.node.right,rpair.vl + 1));    
+        }
+    }
+
+    for(int ele: ans)
+       System.out.println(ele);
+    System.out.println();
+}
+
+public static void topView(Node node){
+    width(node,0);
+    int[] ans=new int[rightMaxValue - leftMinValue + 1];
+    Arrays.fill(ans,(int)-1e8);
+
+    LinkedList<pairVO> que=new LinkedList<>();
+    que.addLast(new pairVO(node,-leftMinValue));
+
+    while(que.size()!=0){
+        int size=que.size();
+        while(size--> 0){
+            pairVO rpair=que.removeFirst();
+            
+            if(ans[rpair.vl] == (int)-1e8)
+              ans[rpair.vl] = rpair.node.data;
+            
+              if(rpair.node.left!=null) que.addLast(new pairVO(rpair.node.left, rpair.vl - 1));
+            if(rpair.node.right!=null) que.addLast(new pairVO(rpair.node.right,rpair.vl + 1));    
+        }
+    }
+
+   for(int ele: ans)
+       System.out.println(ele);
+    System.out.println();
+}
+
+static int leftDMinValue=0;
+public static void widthDiagonal(Node node,int lev){
     if(node==null) return;
 
-    leftmost=Math.min(leftmost,lev);
-    rightmost=Math.max(rightmost,lev);
+    leftMinValue=Math.min(leftMinValue,lev);
 
-    width(node.left,lev-1);
-    width(node.right,lev+1);
-}
+    width(node.left, lev - 1);
+    width(node.right, lev + 0);
+} 
 
-public static class pair{
-    Node n;
-    int level=0;
-    public pair(Node n,int level){
-        this.level=level;
-        this.n=n;
-    }
-}
 
-public static void verticalorder(Node node){
-    width(node,0);
-    ArrayList<ArrayList<Integer>> ans=new ArrayList<>();
-    int n=rightmost-leftmost+1;
-    for(int i=0;i<n;i++){
-        ans.add(new ArrayList());
-    }
+public static void diagonalOrder(Node node){
+    widthDiagonal(node,0);
+    int n= -leftDMinValue + 1;
+    ArrayList<ArrayList<Integer>> ans=new ArrayList<>(); // vector<vector<int>> (n,vector<int>());
+    for(int i=0;i<n;i++)
+      ans.add(new ArrayList<>());
+   
 
-    LinkedList<pair> que=new LinkedList();
-    pair p=new pair(node,-leftmost);
-    que.addLast(p);
+    LinkedList<pairVO> que=new LinkedList<>();
+    que.addLast(new pairVO(node,-leftMinValue));
 
     while(que.size()!=0){
         int size=que.size();
-        while(size-->0){
-            pair idx=que.removeFirst();
-            ans.get(idx.level).add(idx.n.data);
-            if(idx.n.left!=null) que.addLast(new pair(idx.n.left,idx.level-1));
-            if(idx.n.right!=null) que.addLast(new pair(idx.n.right,idx.level+1));            
+        while(size--> 0){
+            pairVO rpair=que.removeFirst();
+            ans.get(rpair.vl).add(rpair.node.data);
+            if(rpair.node.left!=null) que.addLast(new pairVO(rpair.node.left, rpair.vl - 1));
+            if(rpair.node.right!=null) que.addLast(new pairVO(rpair.node.right,rpair.vl + 0));    
         }
     }
-    for(ArrayList<Integer> ar:ans){
-        System.out.print(ar+" ");
-        
+
+    for(ArrayList<Integer> ar: ans)
+       System.out.println(ar);
     System.out.println();
-    }
 }
 
-public static void verticalordersum(Node node){
-    width(node,0);    
-    int n=rightmost-leftmost+1;
+public static void diagonalSum(Node node){
+    widthDiagonal(node,0);
+    int n= -leftDMinValue + 1;
     int[] ans=new int[n];
 
-    LinkedList<pair> que=new LinkedList();
-    pair p=new pair(node,-leftmost);
-    que.addLast(p);
+    LinkedList<pairVO> que=new LinkedList<>();
+    que.addLast(new pairVO(node,-leftMinValue));
 
     while(que.size()!=0){
         int size=que.size();
-        while(size-->0){
-            pair idx=que.removeFirst();
-            ans[idx.level]+=(idx.n.data);
-            if(idx.n.left!=null) que.addLast(new pair(idx.n.left,idx.level-1));
-            if(idx.n.right!=null) que.addLast(new pair(idx.n.right,idx.level+1));            
+        while(size--> 0){
+            pairVO rpair=que.removeFirst();
+            ans[rpair.vl] += rpair.node.data;
+            if(rpair.node.left!=null) que.addLast(new pairVO(rpair.node.left, rpair.vl - 1));
+            if(rpair.node.right!=null) que.addLast(new pairVO(rpair.node.right,rpair.vl + 0));    
         }
     }
-    for(int ar:ans){
-        System.out.print(ar+" ");
-        
-    }
+
+    for(int ele: ans)
+       System.out.println(ele);
+    System.out.println();
 }
 
-public static void topview(Node node){
-    width(node,0);
-    int n=rightmost-leftmost+1;
-    int[] ans=new int[n];
-    for(int i=0;i<n;i++){
-        ans[i]=(int)-1e8;
+static Node DLLhead=null;
+static Node DLLprev=null;
+
+public static void DLL(Node node){
+     if(node==null) return;
+     
+     DLL(node.left);
+     
+     if(DLLhead==null){
+        DLLhead=node;
+     }else{
+         DLLprev.right=node;
+         node.left=DLLprev;
+     }
+      DLLprev=node;
+
+     DLL(node.right);
+     
     }
 
-    LinkedList<pair> que=new LinkedList();
-    pair p=new pair(node,-leftmost);
-    que.addLast(p);
+   public static class allSolution{
+       int height = 0;
+       int size=0;
+       boolean find=false;
 
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-->0){
-            pair idx=que.removeFirst();
-            if(ans[idx.level]==(int)-1e8)
-                ans[idx.level]=(idx.n.data);
-            if(idx.n.left!=null) que.addLast(new pair(idx.n.left,idx.level-1));
-            if(idx.n.right!=null) que.addLast(new pair(idx.n.right,idx.level+1));            
-        }
-    }
-    for(int ar:ans){
-        System.out.print(ar+" ");        
-        System.out.println();
-    }
-}
+       Node pred=null;
+       Node succ=null;
+       Node prev=null;
+   }
 
-public static void bottomview(Node node){
-    width(node,0);
-    int n=rightmost-leftmost+1;
-    int[] ans=new int[n];
+   public static void allSol(Node node,int data,int level,allSolution pair){
+    if(node==null) return;
+    pair.size++;
+    pair.height=Math.max(pair.height,level);
+    pair.find= pair.find || node.data==data;
+    
+    // if(pair.prev==null){
+    //     pair.prev=node;
+    // }
+    // else{
+    //     if(pair.prev.data==data) pair.succ=node;
 
-    LinkedList<pair> que=new LinkedList();
-    que.addLast(new pair(node,-leftmost));
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-->0){
-            pair idx=que.removeFirst();
+    //     else if(node.data==data) pair.pred=pair.prev;
+    // }
+    if(node.data==data && pair.pred==null) pair.pred=pair.prev;
+    if(pair.prev!=null && pair.prev.data == data && pair.succ==null) pair.succ=node;
+    pair.prev=node;
+    
+     allSol(node.left,data,level+1,pair);
+     allSol(node.right,data,level+1,pair);
+   }
 
-            ans[idx.level]=idx.n.data;
-            if(idx.n.left!=null) que.addLast(new pair(idx.n.left,idx.level-1));
-            if(idx.n.right!=null) que.addLast(new pair(idx.n.right,idx.level+1));
-        }
-    }
-    for(int a:ans){
-        System.out.print(a+" ");
-        System.out.println();
-    }
+//=====================================================================================================================
+//=====================================================================================================================
+
+public static void set3(Node node){
+    allSolution pair=new allSolution();
+    allSol(node,31,0,pair);
+    System.out.println(pair.pred.data);
+    System.out.println(pair.succ.data);
     
 }
 
-//question==============================================
 
-public static Node linearize(Node root){
-    if(root.left==null&&root.right==null) return root;
-    
-    if(root.left==null&&root.right!=null){
-        root.left=root.right;
-        root.right=null;
-        return linearize(root.right);
+  public static void set2(Node node){
+    DLL(node);
+    while(DLLhead!=null){
+        System.out.print(DLLhead.data+ " ");
+        DLLhead=DLLhead.right;
     }
-    Node leftLast=linearize(root.left);
-    if(root.right!=null){
-        Node rightLast=linearize(root.right);
-        leftLast.left=root.right;
-        root.right=null;
-        return rightLast;
-    }
-    return leftLast;
-}
+  }
 
 
-public static void set(Node node){
-    linearize(node);
-    display(node);
-}
+   public static void view(Node node){
+    //    leftView(node);
+    //    rightView(node);
+    //    verticalOrder(node);
+    //    bottomView(node);
+    //    topView(node);
 
-public static void views(Node node){
-    // leftview(node);
-    // rightview(node);
-    // verticalOrder(node);
-    // verticalordersum(node);
-    // bottomview(node);
-    // topview(node);
-}
+   }
 
    public static void levelOrder(Node node){
     // levelOrder_00(node);
     // levelOrder_01(node);
     // levelOrder_02(node);
-    levelOrder_03(node);
-
+    // levelOrder_03(node);
    }
 
 
@@ -651,14 +749,16 @@ public static void views(Node node){
    }
 
    public static void solve(){
-    //    int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
-    int[] arr=   {11,6,4 ,-1, 5 ,-1, -1, 8, -1, 10, -1, -1, 19, 17, -1, -1, 43, 31, -1, -1, 49, -1, -1};
+    //    int[] arr={11,6,4 ,-1, 5 ,-1, -1, 8, -1, 10, -1, -1, 19, 17, -1, -1, 43, 31, -1, -1, 49, -1, -1};
+         int[] arr=   {10,20,30,40,50,60,70,80,90,100,110,120,130};
     //    int[] arr={10,20};
        Node root=constructTree(arr);
        display(root);
     //    set1(root);
     //    levelOrder(root);
-    //    views(root);
-    // set(root);
+        //    view(root);
+        // set2(root);
+        set3(root);
+
    }
 }
