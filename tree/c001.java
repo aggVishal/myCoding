@@ -735,10 +735,10 @@ public static void set3(Node node){
 
 
    public static void set1(Node node){
-    //   rootToNodePath(node,100);
+    // rootToNodePath(node,100);
     
-    //   lowestCommonAncestor_02(node,200,30);
-    //   System.out.println("LCA: " + (LCANode!=null?LCANode.data:"-1"));
+    // lowestCommonAncestor_02(node,200,30);
+    // System.out.println("LCA: " + (LCANode!=null?LCANode.data:"-1"));
     // allNodeKAway(node,20,1);
 
 
@@ -748,17 +748,14 @@ public static void set3(Node node){
     System.out.println(diameter);
    }
 
-   public static void solve(){
-    //    int[] arr={11,6,4 ,-1, 5 ,-1, -1, 8, -1, 10, -1, -1, 19, 17, -1, -1, 43, 31, -1, -1, 49, -1, -1};
-         int[] arr=   {10,20,30,40,50,60,70,80,90,100,110,120,130};
-    //    int[] arr={10,20};
-       Node root=constructTree(arr);
-       display(root);
-    //    set1(root);
-    //    levelOrder(root);
-        //    view(root);
-        // set2(root);
-        set3(root);
-
-   }
+public static void solve(){
+    int[] arr={11,6,4 ,-1, 5 ,-1, -1, 8, -1, 10, -1, -1, 19, 17, -1, -1, 43, 31, -1, -1, 49, -1, -1};
+    Node root=constructTree(arr);
+    display(root);
+    // set1(root);
+    // levelOrder(root);
+    // view(root);
+    // set2(root);
+    set3(root);
+}
 }
