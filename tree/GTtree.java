@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.LinkedList;
 public class GTtree{
     public static void main(String[] args){
         solve();
@@ -97,6 +98,21 @@ public class GTtree{
         return res;
     }
 
+    public static void levelorder(Node node){
+        LinkedList<Node> que=new LinkedList<>();
+        que.addLast(node);
+        while(que.size()!=0){
+            int s=que.size();
+            while(s-->0){
+                Node idx=que.removeFirst();
+                System.out.print(idx.data+" ");
+                for(int i=0;i<idx.childs.size();i++){
+                    que.addLast(idx.childs.get(i));
+                }
+            }
+        }
+    }
+
 
 
 
@@ -110,9 +126,11 @@ public class GTtree{
         // System.out.println(SizeofGT(node));
         // System.out.println(find(node,900));
 
-        ArrayList<Integer> path=new ArrayList<>();
-        rootToNodePath(node,90,path);
-        System.out.print(path+ " ");
+        // ArrayList<Integer> path=new ArrayList<>();
+        // rootToNodePath(node,90,path);
+        // System.out.print(path+ " ");
+
+        levelorder(node);
     }
 
     public static void solve(){
