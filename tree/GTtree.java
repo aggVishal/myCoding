@@ -96,8 +96,7 @@ public class GTtree{
             path.remove(path.size()-1);
         }  
         return res;
-    }
-
+    }    
     public static void levelorder(Node node){
         LinkedList<Node> que=new LinkedList<>();
         que.addLast(node);
@@ -112,11 +111,7 @@ public class GTtree{
             }
         }
     }
-
-
-
-
-
+    
 
 
     //=========================================================================================
