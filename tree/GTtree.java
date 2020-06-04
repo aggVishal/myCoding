@@ -55,6 +55,8 @@ public class GTtree{
         }
     }
 
+//Basic Questions===========================================================================================================================
+
     public static int height(Node node){
         int h=0;
         for(int i=0;i<node.childs.size();i++){
@@ -97,6 +99,7 @@ public class GTtree{
         }  
         return res;
     }    
+
     public static void levelorder(Node node){
         LinkedList<Node> que=new LinkedList<>();
         que.addLast(node);
@@ -112,9 +115,45 @@ public class GTtree{
         }
     }
 
+//Main Questions===================================================================================================================================
+
+    public static boolean isMirror(Node root1,Node root2){
+        if(root1.childs.size()!=root2.childs.size()||root1.data!=root2.data) return false;
+
+        for(int i=0,j=root1.childs.size()-1;j>=0;i++,j--){
+            if(!isMirror(root1.childs.get(i),root2.childs.get(j))) return false;
+        }
+        return true;
+    }
+
+    public static Node linearize(Node root){
+        if(root.childs.size()==0)return root;
+        Node last=linearize(root.childs.get(root.childs.size()-1));
+        for(int i=root.childs.size()-2;i>=0;i--){
+            Node secondLast=linearize(root.childs.get(i));
+            secondLast.childs.add(root.childs.get(root.childs.size()-1));
+            root.childs.remove(root.childs.size()-1);
+        }
+        return last;
+    }
+
+    public static void flattern(Node node){
+        ArrayList<Node>newCH=new ArrayList<>();
+
+        for(Node child:node.childs){
+            flattern(child);
+            newCH.add(child);
+            for(Node ch:child.childs){
+                newCH.add(ch);
+            }
+            child.childs.clear();
+        }       
+        node.childs.clear();
+        node.childs=newCH; 
+    }
 
 
-    //=========================================================================================
+//===============================================================================================================================================
     public static void set1(Node node){
         // preorder(node);
         // System.out.println(height(node));
@@ -125,15 +164,25 @@ public class GTtree{
         // rootToNodePath(node,90,path);
         // System.out.print(path+ " ");
 
-        levelorder(node);
+        // levelorder(node);
+
+        // System.out.println(isMirror(node,node));
+
+        // linearize(node);
+        // display(node);
+
+        flattern(node);
+        display(node);
     }
 
     public static void solve(){
         int[] ar={10,20,50,-1,60,-1,-1,30,70,-1,80,100,-1,110,-1,-1,90,-1,-1,40,120,140,-1,150,-1,-1,-1,-1};
+        // int[] ar={1,2,3,-1,-1,2,3,-1,-1,-1};
         Node node=constructGTtree(ar);
         display(node);
         System.out.println();
         set1(node);
         
     }
+    
 }
