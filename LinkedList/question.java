@@ -37,6 +37,29 @@
         return prev;        
     }
 
+//reverseList2 : reverse data
+    public ListNode reverseList2(ListNode head){
+        ListNode curr=head;
+        ListNode midNode=middleNode(head);
+        ListNode nhead=reverseList(midNode.next);
+        midNode.next=null;
+        ListNode curr1=nhead;
+        while(curr!=null&&curr1!=null){
+            int temp=curr.val;
+            curr.val=curr1.val;
+            curr1.val=temp;
+
+            curr=curr.next;
+            curr1=curr1.next            
+        }
+        nhead=reverseList(nhead);
+        midNode.next=nhead;
+    }
+
+//leetcode 234  palindrome
+
+
+
 //leetcode 19 Remove nth node from last
     public ListNode removeNthFromEnd(ListNode head, int n) {
         if(head==null)return null;
@@ -53,6 +76,8 @@
         prev.next=prev.next.next;
         return head;
     }
+
+
 
 
 //leetcode 143
