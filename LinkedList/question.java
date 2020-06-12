@@ -40,7 +40,7 @@
 //reverseList2 : reverse data
     public ListNode reverseList2(ListNode head){
         ListNode curr=head;
-        ListNode midNode=middleNode(head);
+        ListNode midNode=middleNode2(head);
         ListNode nhead=reverseList(midNode.next);
         midNode.next=null;
         ListNode curr1=nhead;
@@ -57,7 +57,21 @@
     }
 
 //leetcode 234  palindrome
-
+    public boolean isPalindrome(ListNode head) {
+        if(head==null||head.next==null)return true;
+        ListNode mid=middleNode(head);
+        ListNode nhead=mid.next;
+        mid.next=null;
+        nhead=reverseList(nhead);
+        ListNode curr=head;
+        ListNode curr1=nhead;
+        while(curr1!=null&&curr!=null){
+            if(curr.val!=curr1.val) return false;
+            curr=curr.next;
+            curr1=curr1.next;
+        }
+        return true;
+    }
 
 
 //leetcode 19 Remove nth node from last
@@ -78,11 +92,41 @@
     }
 
 
+//leetcode 143 Reorder List
+    public void reorderList(ListNode head) {
+        if(head==null||head.next==null)return;
+        ListNode mid=middleNode2(head);
+        ListNode nhead=reverseList(mid.next);
+        mid.next=null;
+        ListNode curr=head;
+        ListNode curr1=nhead;
+        while(curr1!=null&&curr!=null){            
+            ListNode f1=curr.next;
+            ListNode f2=curr1.next;
+            curr.next=curr1;
+            curr1.next=f1;
+            curr=f1;
+            curr1=f2;
+        }
+    }
 
-
-//leetcode 143
 
 //class Question based on leetcode 143
-public static void reorder_inv(Node head){
-    
-}
+    public static void reorder_inv(ListNode head){
+
+    }
+
+
+//leetcode: Odd Even Linked List
+    public ListNode oddEvenList(ListNode head) {
+        if(head==null||head.next==null)return head;
+        ListNode curr=head;
+        ListNode curr1=head.next;
+        while(curr!=null&&curr1!=null){
+            ListNode f1=curr1.next;
+            ListNode f2=f1.next;
+
+            curr.next=curr1;
+            curr1.next=
+        }
+    }
