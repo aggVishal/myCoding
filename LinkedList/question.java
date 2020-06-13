@@ -272,6 +272,31 @@ public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         return null;
         
     }
+
+//leetcode 148 Sort linked list
+    public ListNode sortList(ListNode head) {
+        if(head==null||head.next==null) return head;
+        ListNode mid=middleNode2(head);
+        ListNode nhead=mid.next;
+        mid.next=null;
+        
+        return mergeTwoLists(sortList(head),sortList(nhead));
+    }
+
+
+//leetcode 23 Merge k linked lists
+    public ListNode mergeKLists_(ListNode[] lists,int si,int ei) {
+        if(si==ei){
+            return lists[si];
+        }        
+        int mid=(si+ei)/2;
+        return mergeTwoLists(mergeKLists_(lists,si,mid),mergeKLists_(lists,mid+1,ei));
+    }
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists.length==0)return null;
+        return mergeKLists_(lists,0,lists.length-1);       
+    }
+
 //leetcode: 138
 //leetcode: 445 (imp)
 //leetcode: 2
