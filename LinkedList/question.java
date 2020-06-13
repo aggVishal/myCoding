@@ -1,5 +1,20 @@
 // Linked List Leetcode Quetions
 
+
+public class question {
+
+    public class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+    }
+
+    
+
 // leetcode 876 Middle of the Linked list
     public ListNode middleNode(ListNode head) {              // Upper Bound
         if(head==null||head.next==null)return head;
@@ -111,22 +126,157 @@
     }
 
 
-//class Question based on leetcode 143
-    public static void reorder_inv(ListNode head){
-
-    }
-
-
-//leetcode: Odd Even Linked List
-    public ListNode oddEvenList(ListNode head) {
-        if(head==null||head.next==null)return head;
-        ListNode curr=head;
-        ListNode curr1=head.next;
-        while(curr!=null&&curr1!=null){
-            ListNode f1=curr1.next;
+//class Question: based on leetcode 143
+    public void reorder_inv(ListNode head){    //wrong
+        if(head==null||head.next==null)return ;
+        ListNode curr1=head;
+        ListNode curr2=head.next;
+        ListNode prev=null;
+        while(curr2.next!=null&&curr1.next!=null){
+            ListNode f1=curr2.next;
             ListNode f2=f1.next;
 
-            curr.next=curr1;
-            curr1.next=
+            curr1.next=f1;
+            curr2.next=prev;
+            prev=curr2;
+            curr1=f1;
+            curr2=f2;
         }
+        if(curr1==null){
+            curr1=prev;
+        }
+        else curr1.next=prev;
     }
+
+//leetcode: 21 Merge two LL
+public ListNode mergeTwoLists(ListNode l1, ListNode l2) {        
+        ListNode c1=l1;
+        ListNode c2=l2;
+        ListNode head=new ListNode(-1);
+        ListNode pre=head;
+        while(c1!=null&&c2!=null){
+            if(c1.val>c2.val){
+                pre.next=c2;
+                pre=pre.next;
+                c2=c2.next;
+            }
+            else{
+                pre.next=c1;
+                pre=pre.next;
+                c1=c1.next;
+            }
+            
+        }
+        if(c1==null){
+            pre.next=c2;
+        }
+        else{
+            pre.next=c1;
+        }
+        return head.next;
+    }
+
+//leetcode: 328  Odd Even Linked List
+    public ListNode oddEvenList(ListNode head) {
+        if(head==null||head.next==null)return head;
+        ListNode curr1=head;
+        ListNode curr2=head.next;
+        ListNode c2=head.next;
+        while(curr1.next!=null&&curr2.next!=null){
+            ListNode f1=curr2.next;
+            ListNode f2=f1.next;
+
+            curr1.next=f1;
+            curr2.next=f2;
+            curr1=f1;
+            curr2=f2;
+        }
+        if(curr2!=null){
+            curr2.next=null;
+            curr1.next=c2;
+        }
+        else curr1.next=c2;
+        return head;
+    }
+
+//leetcode: 203
+//leetcode: 83
+
+
+//leetcode: 141 Linked List Cycle
+    public boolean hasCycle(ListNode head) {
+        if(head==null||head.next==null)return false;
+        ListNode fast=head;
+        ListNode slow=head;
+        while(fast!=null&&fast.next!=null){
+            fast=fast.next.next;
+            slow=slow.next;
+            if(fast==slow){
+                return true;
+            }
+        }
+        return false;       
+    }
+//leetcode: 142 Linked List Cycle II
+    public ListNode detectCycle(ListNode head) {
+        if(head==null||head.next==null)return null;
+        ListNode fast=head;
+        ListNode slow=head;
+        ListNode c;
+        while(fast!=null&&fast.next!=null){
+            fast=fast.next.next;
+            slow=slow.next;
+            if(fast==slow){
+                c=fast;
+                slow=head;
+                while(fast!=slow){
+                    fast=fast.next;
+                    slow=slow.next;
+                }
+                return fast;
+            }
+        }
+        return null;
+    }
+//leetcode: 160 Intersection of Two Linked Lists
+    public ListNode getIntersectionNode(ListNode head, ListNode headB) {
+        if(headB==null)return null;
+        ListNode curr=headB;
+        while(curr.next!=null){
+            curr=curr.next;
+        }
+        curr.next=headB;
+        
+        if(head==null||head.next==null){
+            curr.next=null;
+            return null;
+        }
+        ListNode fast=head;
+        ListNode slow=head;
+        ListNode c;
+        while(fast!=null&&fast.next!=null){
+            fast=fast.next.next;
+            slow=slow.next;
+            if(fast==slow){
+                c=fast;
+                slow=head;
+                while(fast!=slow){
+                    fast=fast.next;
+                    slow=slow.next;
+                }
+                curr.next=null;
+                return fast;
+            }
+        }
+        curr.next=null;
+        return null;
+        
+    }
+//leetcode: 138
+//leetcode: 445 (imp)
+//leetcode: 2
+//leetcode: 82
+//leetcode: 92
+
+
+}
