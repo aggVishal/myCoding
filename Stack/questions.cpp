@@ -231,6 +231,203 @@ vector<int> asteroidCollision(vector<int>& arr) {
     
 }
 
+//Leetcode 84. Largest Rectangle in Histogram
+int largestRectangleArea1(vector<int>& heights) {
+    vector<int> nsr=nsor(heights);
+    vector<int> nsl=nsol(heights);
+    int max_=0;
+    for(int i=0;i<heights.size();i++){
+        int w=nsr[i]-nsl[i]-1;
+        max_=max(max_,w*heights[i]);
+    }
+    return max_;
+}
+int largestRectangleArea2(vector<int>& arr) {
+    stack<int> st;
+    st.push(-1);
+    int n=arr.size();
+    int area=0;
+    for(int i=0;i<n;i++){
+        while(st.top()!=-1 && arr[st.top()]>arr[i]){
+            int idx=st.top();
+            st.pop();
+            int w=i-st.top()-1;
+            area=max(area,w*arr[idx]);
+        }
+        st.push(i);
+    }
+    while(st.top()!=-1){
+        int idx=st.top();
+        st.pop();
+        int w=n-st.top()-1;
+        area=max(area,w*arr[idx]);
+    }
+    return area;
+}
+
+//Leetcode 85. Maximal Rectangle
+int maximalRectangle(vector<vector<char>>& matrix) {
+    if(matrix.size()==0||matrix[0].size()==0)return 0;
+    int n=matrix.size();
+    int m=matrix[0].size();
+    vector<int> base(m,0);
+    int max_=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            int ch=matrix[i][j]-'0';
+            if(ch==1){
+                base[j]+=ch;
+            }
+            else{
+                base[j]=0;
+            }
+        }
+        max_=max(max_,maxrect(base));           
+    }
+    return max_;
+}
+
+//Leetcode 42. Trapping Rain Water
+int trap1(vector<int>& height) {
+    int n=height.size();
+    if(n==0)return 0;
+    vector<int>ngl(n,height[0]);
+    vector<int>ngr(n,height[n-1]);
+    for(int i=1;i<n;i++){
+        if(height[i]>ngl[i-1]){
+            ngl[i]=height[i];
+        }     
+        else{
+            ngl[i]=ngl[i-1];
+        }
+    }
+    for(int i=n-2;i>=0;i--){
+        if(height[i]>ngr[i+1]){
+            ngr[i]=height[i];
+        }     
+        else{
+            ngr[i]=ngr[i+1];
+        }
+    }
+    int ans=0;
+    for(int i=0;i<n;i++){
+        int len=min(ngl[i],ngr[i]);
+        ans+=len-height[i];
+    }
+    return ans;
+}
+
+int trap2(vector<int>& height) {
+
+}
+
+int trap3(vector<int>& height) {
+    int n=height.size();
+    int water=0;
+    int li=0,ri=n-1,lmax=0,rmax=0;
+    while(li<ri){
+        lmax=max(height[li],lmax);
+        rmax=max(height[ri],rmax);
+        if(lmax>=rmax){
+            water+=rmax-height[ri--];
+        }
+        else{
+            water+=lmax-height[li++];
+        }
+    }
+    return water;
+}
+
+// Leetcode 155. Min Stack
+// One solution is by using two stacks
+class MinStack {
+    stack<long> st;
+    long minsf=0; 
+    public:
+    MinStack() {
+        minsf=0;
+    }
+    
+    void push(int x) {
+        if (st.size() == 0)
+        {
+            st.push(x);
+            minsf = x;
+            return;
+        }
+        if(x>=minsf){
+            st.push(x);
+        }              
+        else{
+            st.push(2*(long)x-minsf);
+            minsf=x;            
+        }
+    }
+    
+    void pop() {
+        if(st.top()<minsf){
+            minsf=2*minsf - st.top();
+        }
+        st.pop();        
+    }
+    
+    int top() {
+        if(st.top()>minsf){
+            return st.top();
+        }
+        else{
+            return (int)minsf;
+        }
+    }
+    
+    int getMin() {
+        return (int)minsf;        
+    }
+};
+
+
+// Leetcode 946. Validate Stack Sequences
+bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+    stack<int> st;
+    int idx=0;
+    for(int i=0;i<pushed.size();i++){
+        st.push(pushed[i]);
+        while(st.size()!=0 && st.top()==popped[idx]){
+            st.pop();
+            idx++;
+        }            
+    }
+    return st.size()==0;        
+}
+
+// Leetcode 402. Remove K Digits
+string removeKdigits(string num, int k) {
+    stack<char> st;
+    for(int i=0;i<num.size();i++){
+        while(st.size()!=0 && k>=1 && st.top()>num[i]){
+            st.pop();
+            k--;
+        }
+        st.push(num[i]);
+    }
+    while(k--){
+        st.pop();
+    }
+    
+    string ans="";
+    while(st.size()!=0){
+        ans+=st.top();
+        st.pop();
+    }
+    reverse(ans.begin(),ans.end());
+    int idx=0;
+    while(ans[idx]=='0'){
+        ans=ans.substr(1);
+    }
+    return (ans.size()==0)?"0":ans;
+}
+
+
 
 //===========================================================================================================
 void solve(){
