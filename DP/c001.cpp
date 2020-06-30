@@ -1,7 +1,6 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
 using namespace std;
-
 
 // //mazepath series...
 // int MP_jumps(int sr,int sc,int er,int ec,vector<vector<int>>& dp){
@@ -111,7 +110,7 @@ using namespace std;
 //         }
 //         dp[s]=count;
 //     }
-//     return dp[0];                      
+//     return dp[0];
 // }
 
 // //Leetcode 70. Climbing Stairs
@@ -133,7 +132,7 @@ using namespace std;
 // // Leetcode 746. Min Cost Climbing Stairs
 // int helper(int s,int n,vector<int>& cost,vector<int>& dp){
 //     if(s>=n-2){
-//         return dp[s]=cost[s]; 
+//         return dp[s]=cost[s];
 //     }
 //     if(dp[s]!=0)return dp[s];
 //     int count=min(helper(s+1,n,cost,dp),helper(s+2,n,cost,dp));
@@ -142,21 +141,27 @@ using namespace std;
 // int minCostClimbingStairs(vector<int>& cost) {
 //     int n=cost.size();
 //     vector<int>dp(n+1);
-//     helper(0,n,cost,dp);  
+//     helper(0,n,cost,dp);
 //     return min(dp[0],dp[1]);
 // }
 
-//Leetcode 
+//Leetcode
 
-
-// https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
-
-
+//https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
 
 // https://www.geeksforgeeks.org/mobile-numeric-keypad-problem/
 
-void solve(){
-    int n=10;
+
+
+
+
+
+//leetcode 516
+//Leetcode 115
+
+void solve()
+{
+    int n = 10;
     // vector<vector<int>> dp(n+1,vector<int>(n+1,0));
     // vector<int> dp(n+1,0);
     //  cout<<MP_jumps(0,0,n-1,n-1,dp)<<endl;
@@ -168,8 +173,9 @@ void solve(){
     // cout<<dice_random(0,n,ar,dp);
     // cout<<dice_randomDP(0,n,ar,dp);
 
-    cout<<partition_in_K_subset(3,2);
+    cout << partition_in_K_subset(3, 2);
 }
-int main(){
+int main()
+{
     solve();
 }
