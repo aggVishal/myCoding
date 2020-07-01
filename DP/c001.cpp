@@ -343,7 +343,67 @@ int longestPalindromeSubseq_DP(string &s)
     return dp[0][n - 1];
 }
 
-//Leetcode 115
+//Leetcode 115. Distinct Subsequences
+int numDistinct_(int i, int j, string &s, string &t, vector<vector<int>> &dp)
+{
+    if (j == 0)
+    {
+        return dp[i][j] = 1;
+    }
+    if (i < j)
+    {
+        return dp[i][j] = 0;
+    }
+    if (dp[i][j] != -1)
+        return dp[i][j];
+    int count;
+    if (s[i - 1] == t[j - 1])
+    {
+        count = numDistinct_(i - 1, j - 1, s, t, dp) + numDistinct_(i - 1, j, s, t, dp);
+    }
+    else
+    {
+        count = numDistinct_(i - 1, j, s, t, dp);
+    }
+    return dp[i][j] = count;
+}
+int numDistinct(string s, string t)
+{
+    vector<vector<int>> dp(s.size() + 1, vector<int>(t.size() + 1, -1));
+    return numDistinct_(s.size(), t.size(), s, t, dp);
+}
+//********************************************
+int numDistinct(string s, string t)
+{
+    vector<vector<int>> dp(s.size() + 1, vector<int>(t.size() + 1, -1));
+    for (int i = 0; i < s.size() + 1; i++)
+    {
+        for (int j = 0; j < t.size() + 1; j++)
+        {
+            if (j == 0)
+            {
+                dp[i][j] = 1;
+                continue;
+            }
+            if (i < j)
+            {
+                dp[i][j] = 0;
+                continue;
+            }
+            int count;
+            if (s[i - 1] == t[j - 1])
+            {
+                count = dp[i - 1][j - 1] + dp[i - 1][j];
+            }
+            else
+            {
+                count = dp[i - 1][j];
+            }
+            dp[i][j] = count;
+        }
+    }
+    return dp[s.size()][t.size()];
+}
 
 //******************************************************************************
 //Leetcode 1143: Longest Common Subsequence
