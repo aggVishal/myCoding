@@ -311,12 +311,37 @@ int longestPalindromeSubseq_(int s, int e, string &str, vector<vector<int>> &dp)
     return dp[s][e] = len;
 }
 
-int longestPalindromeSubseq(string s)
+int longestPalindromeSubseq_REC(string s)
 {
     vector<vector<int>> dp(s.size(), vector<int>(s.size(), 0));
     return longestPalindromeSubseq_(0, s.size() - 1, s, dp);
 }
 //****************************************************************************
+int longestPalindromeSubseq_DP(string &s)
+{
+    int n = s.size();
+    vector<vector<int>> dp(n, vector<int>(n, 0));
+    for (int gap = 0; gap < n; gap++)
+    {
+        for (int i = 0, j = gap; j < n; j++, i++)
+        {
+            if (gap == 0)
+            {
+                dp[i][j] = 1;
+                continue;
+            }
+            if (s[i] == s[j])
+            {
+                dp[i][j] = 2 + dp[i + 1][j - 1];
+            }
+            else
+            {
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return dp[0][n - 1];
+}
 
 //Leetcode 115
 
