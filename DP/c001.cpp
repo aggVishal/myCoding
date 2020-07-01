@@ -300,6 +300,55 @@ int maxUncrossedLines_DP(vector<int> &A, vector<int> &B)
 }
 //***************************************************
 
+//Leetcode 1458
+int helper(int i, int j, vector<int> &num1, vector<int> &num2, vector<vector<int>> &dp)
+{
+    if (i == num1.size() || j == num2.size())
+    {
+        return dp[i][j] = -1e8;
+    }
+    if (dp[i][j] != 0)
+        return dp[i][j];
+
+    int val = num1[i] * num2[j];
+    int a = helper(i + 1, j + 1, num1, num2, dp) + val;
+    int b = helper(i + 1, j, num1, num2, dp);
+    int c = helper(i, j + 1, num1, num2, dp);
+    return dp[i][j] = max(max(val, a), max(c, b));
+}
+
+int maxDotProduct(vector<int> &num1, vector<int> &num2)
+{
+    vector<vector<int>> dp(num1.size() + 1, vector<int>(num2.size() + 1, 0));
+    return helper(0, 0, num1, num2, dp);
+}
+//***************************************************
+int maxDotProduct_DP(vector<int> &num1, vector<int> &num2)
+{
+    vector<vector<int>> dp(num1.size() + 1, vector<int>(num2.size() + 1, -1));
+    for (int i = num1.size() - 1; i >= 0; i--)
+    {
+        for (int j = num2.size() - 1; j >= 0; j--)
+        {
+            if (i == num1.size() || j == num2.size())
+            {
+                dp[i][j] = -1e8;
+                continue;
+            }
+            if (dp[i][j] != 0)
+                dp[i][j];
+                continue;
+
+            int val = num1[i] * num2[j];
+            int a = dp[i + 1][j + 1] + val;
+            int b = dp[i + 1][j];
+            int c = dp[i][j + 1];
+            dp[i][j] = max(max(val, a), max(c, b));
+        }
+    }
+    return dp[0][0];
+}
+
 void solve()
 {
     int n = 10;
@@ -309,7 +358,7 @@ void solve()
     // cout << MP_jumps_DP(0, 0, n - 1, n - 1, dp) << endl;
 
     // cout << dice(0, n, dp);
-// cout << dice_DP(0, n, dp);
+    // cout << dice_DP(0, n, dp);
     // vector<int> ar = {1, 3, 5, 6};
     // cout << dice_random(0, n, ar, dp);
     // cout << dice_randomDP(0, n, ar, dp);
