@@ -198,7 +198,126 @@ using namespace std;
 
 // https://www.geeksforgeeks.org/mobile-numeric-keypad-problem/
 
-//leetcode 516
+//Substring and Subsequence Series.=========================================================================
+
+vector<vector<bool>> isPalindrome_Substring(string str)
+{
+    vector<vector<bool>> dp(str.size(), vector<bool>(str.size(), 0));
+    for (int gap = 0; gap < str.size(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.size(); j++, i++)
+        {
+            if (gap == 0)
+            {
+                dp[i][j] = true;
+            }
+            else if (gap == 1 && str[i] == str[j])
+            {
+                dp[i][j] = true;
+            }
+            else if (str[i] == str[j] && dp[i + 1][j - 1])
+            {
+                dp[i][j] = true;
+            }
+        }
+    }
+    return dp;
+}
+
+//Leetcode 5. Longest Palindromic Substring
+string longestPalindrome(string s)
+{
+    int n = s.size();
+    int si = 0, ei = 0;
+    int maxlen = 0;
+    vector<vector<int>> dp(n, vector<int>(n, 0));
+    for (int gap = 0; gap < n; gap++)
+    {
+        for (int i = 0, j = gap; j < n; j++, i++)
+        {
+            if (gap == 0)
+            {
+                dp[i][j] = 1;
+            }
+            else if (gap == 1 && s[i] == s[j])
+            {
+                dp[i][j] = gap + 2;
+            }
+            else if (s[i] == s[j] && dp[i + 1][j - 1] != 0)
+            {
+                dp[i][j] = gap + 2;
+            }
+            if (dp[i][j] > maxlen)
+            {
+                maxlen = dp[i][j];
+                si = i;
+                ei = j;
+            }
+        }
+    }
+    return s.substr(si, (ei - si + 1));
+}
+
+//Leetcode 647. Palindromic Substrings
+int countSubstrings(string str)
+{
+    vector<vector<bool>> dp(str.size(), vector<bool>(str.size(), 0));
+    int ans = 0;
+    for (int gap = 0; gap < str.size(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.size(); j++, i++)
+        {
+            if (gap == 0)
+            {
+                dp[i][j] = true;
+                ans++;
+            }
+            else if (gap == 1 && str[i] == str[j])
+            {
+                dp[i][j] = true;
+                ans++;
+            }
+            else if (str[i] == str[j] && dp[i + 1][j - 1])
+            {
+                dp[i][j] = true;
+                ans++;
+            }
+        }
+    }
+    return ans;
+}
+
+//leetcode 516. Longest Palindromic Subsequence
+int longestPalindromeSubseq_(int s, int e, string &str, vector<vector<int>> &dp)
+{
+    if (s > e)
+        return 0;
+    if (dp[s][e] != 0)
+        return dp[s][e];
+    if (s == e)
+    {
+        return dp[s][e] = 1;
+    }
+
+    int len = 0;
+    if (str[s] == str[e])
+    {
+        len = 2 + longestPalindromeSubseq_(s + 1, e - 1, str, dp);
+    }
+    else
+    {
+        len = max(longestPalindromeSubseq_(s + 1, e, str, dp), longestPalindromeSubseq_(s, e - 1, str, dp));
+    }
+    return dp[s][e] = len;
+}
+
+int longestPalindromeSubseq(string s)
+{
+    vector<vector<int>> dp(s.size(), vector<int>(s.size(), 0));
+    return longestPalindromeSubseq_(0, s.size() - 1, s, dp);
+}
+//****************************************************************************
+
 //Leetcode 115
 
 //******************************************************************************
@@ -338,7 +457,7 @@ int maxDotProduct_DP(vector<int> &num1, vector<int> &num2)
             }
             if (dp[i][j] != 0)
                 dp[i][j];
-                continue;
+            continue;
 
             int val = num1[i] * num2[j];
             int a = dp[i + 1][j + 1] + val;
