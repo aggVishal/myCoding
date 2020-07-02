@@ -320,7 +320,7 @@ int longestPalindromeSubseq_REC(string s)
 int longestPalindromeSubseq_DP(string &s)
 {
     int n = s.size();
-    vector<vector<int>> dp(n, vector<int>(n, 0));
+    vector<vector<long>> dp(n, vector<long>(n, 0));
     for (int gap = 0; gap < n; gap++)
     {
         for (int i = 0, j = gap; j < n; j++, i++)
@@ -373,9 +373,9 @@ int numDistinct(string s, string t)
     return numDistinct_(s.size(), t.size(), s, t, dp);
 }
 //********************************************
-int numDistinct(string s, string t)
+int numDistinct(string& s, string& t)
 {
-    vector<vector<int>> dp(s.size() + 1, vector<int>(t.size() + 1, -1));
+    vector<vector<long>> dp(s.size() + 1, vector<long>(t.size() + 1, -1));
     for (int i = 0; i <= s.size(); i++)
     {
         for (int j = 0; j <= t.size(); j++)
@@ -390,20 +390,20 @@ int numDistinct(string s, string t)
                 dp[i][j] = 0;
                 continue;
             }
-            int count;
             if (s[i - 1] == t[j - 1])
             {
-                count = dp[i - 1][j - 1] + dp[i - 1][j];
+                dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
             }
             else
             {
-                count = dp[i - 1][j];
+                dp[i][j] = dp[i - 1][j];
             }
-            dp[i][j] = count;
         }
     }
     return dp[s.size()][t.size()];
-}
+}//**************************************************************************
+
+//Geeks: https://practice.geeksforgeeks.org/problems/count-palindromic-subsequences/1
 
 //******************************************************************************
 //Leetcode 1143: Longest Common Subsequence
