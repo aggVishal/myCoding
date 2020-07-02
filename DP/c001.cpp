@@ -430,8 +430,6 @@ int countPS_REC(string str)
 }
 //********************************************************************************
 
-
-
 //******************************************************************************
 //Leetcode 1143: Longest Common Subsequence
 int longestCommonSubsequence_(int i, int j, string &text1, string &text2, vector<vector<int>> &dp)
@@ -453,17 +451,19 @@ int longestCommonSubsequence_(int i, int j, string &text1, string &text2, vector
     }
     return dp[i][j] = len;
 }
-int longestCommonSubsequence(string& text1, string& text2){
-    vector<vector<int>> dp(text1.size(),vector<int>(text2.size(),0));
-    return longestCommonSubsequence_(0,0,text1,text2,dp);
+int longestCommonSubsequence(string &text1, string &text2)
+{
+    vector<vector<int>> dp(text1.size() + 1, vector<int>(text2.size() + 1, 0));
+    return longestCommonSubsequence_(0, 0, text1, text2, dp);
 }
+
 //*******************************************************************************
 int longestCommonSubsequence_DP(string text1, string text2)
 {
     vector<vector<int>> dp(text1.size() + 1, vector<int>(text2.size() + 1, 0));
-    for (int i = text1.size() - 1; i >= 0; i--)
+    for (int i = text1.size(); i >= 0; i--)
     {
-        for (int j = text2.size() - 1; j >= 0; j--)
+        for (int j = text2.size(); j >= 0; j--)
         {
             if (i == text1.size() || j == text2.size())
             {
@@ -537,7 +537,7 @@ int maxUncrossedLines_DP(vector<int> &A, vector<int> &B)
 //***************************************************
 
 //Leetcode 1458
-int helper(int i, int j, vector<int> &num1, vector<int> &num2, vector<vector<int>> &dp)
+int maxDotProduct_(int i, int j, vector<int> &num1, vector<int> &num2, vector<vector<int>> &dp)
 {
     if (i == num1.size() || j == num2.size())
     {
@@ -547,16 +547,16 @@ int helper(int i, int j, vector<int> &num1, vector<int> &num2, vector<vector<int
         return dp[i][j];
 
     int val = num1[i] * num2[j];
-    int a = helper(i + 1, j + 1, num1, num2, dp) + val;
-    int b = helper(i + 1, j, num1, num2, dp);
-    int c = helper(i, j + 1, num1, num2, dp);
+    int a = maxDotProduct_(i + 1, j + 1, num1, num2, dp) + val;
+    int b = maxDotProduct_(i + 1, j, num1, num2, dp);
+    int c = maxDotProduct_(i, j + 1, num1, num2, dp);
     return dp[i][j] = max(max(val, a), max(c, b));
 }
 
 int maxDotProduct(vector<int> &num1, vector<int> &num2)
 {
     vector<vector<int>> dp(num1.size() + 1, vector<int>(num2.size() + 1, 0));
-    return helper(0, 0, num1, num2, dp);
+    return maxDotProduct_(0, 0, num1, num2, dp);
 }
 //***************************************************
 int maxDotProduct_DP(vector<int> &num1, vector<int> &num2)
