@@ -423,7 +423,7 @@ int countPS_(int i, int j, string &str, vector<vector<int>> &dp)
     return dp[i][j] = (str[i] == str[j]) ? ans + 1 : ans - middle;
 }
 
-int countPS-REC(string str)
+int countPS_REC(string str)
 {
     vector<vector<int>> dp(str.size(), vector<int>(str.size(), 0));
     return countPS_(0, str.size() - 1, str, dp);
