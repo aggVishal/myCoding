@@ -376,9 +376,9 @@ int numDistinct(string s, string t)
 int numDistinct(string s, string t)
 {
     vector<vector<int>> dp(s.size() + 1, vector<int>(t.size() + 1, -1));
-    for (int i = 0; i < s.size() + 1; i++)
+    for (int i = 0; i <= s.size(); i++)
     {
-        for (int j = 0; j < t.size() + 1; j++)
+        for (int j = 0; j <= t.size(); j++)
         {
             if (j == 0)
             {
