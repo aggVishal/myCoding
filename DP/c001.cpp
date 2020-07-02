@@ -373,7 +373,7 @@ int numDistinct(string s, string t)
     return numDistinct_(s.size(), t.size(), s, t, dp);
 }
 //********************************************
-int numDistinct(string& s, string& t)
+int numDistinct(string &s, string &t)
 {
     vector<vector<long>> dp(s.size() + 1, vector<long>(t.size() + 1, -1));
     for (int i = 0; i <= s.size(); i++)
@@ -401,9 +401,36 @@ int numDistinct(string& s, string& t)
         }
     }
     return dp[s.size()][t.size()];
-}//**************************************************************************
+} //**************************************************************************
 
 //Geeks: https://practice.geeksforgeeks.org/problems/count-palindromic-subsequences/1
+int countPS_(int i, int j, string &str, vector<vector<int>> &dp)
+{
+    if (i > j)
+        return dp[i][j] = 0;
+    if (i == j)
+    {
+        return dp[i][j] = 1;
+    }
+    if (dp[i][j] != 0)
+        return dp[i][j];
+
+    int middle = countPS_(i + 1, j - 1, str, dp);
+    int left = countPS_(i, j - 1, str, dp);
+    int right = countPS_(i + 1, j, str, dp);
+
+    int ans = left + right;
+    return dp[i][j] = (str[i] == str[j]) ? ans + 1 : ans - middle;
+}
+
+int countPS-REC(string str)
+{
+    vector<vector<int>> dp(str.size(), vector<int>(str.size(), 0));
+    return countPS_(0, str.size() - 1, str, dp);
+}
+//********************************************************************************
+
+
 
 //******************************************************************************
 //Leetcode 1143: Longest Common Subsequence
