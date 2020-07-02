@@ -434,7 +434,7 @@ int countPS_REC(string str)
 
 //******************************************************************************
 //Leetcode 1143: Longest Common Subsequence
-int longestCommonSubsequence(int i, int j, string &text1, string &text2, vector<vector<int>> &dp)
+int longestCommonSubsequence_(int i, int j, string &text1, string &text2, vector<vector<int>> &dp)
 {
     if (i == text1.size() || j == text2.size())
     {
@@ -445,13 +445,17 @@ int longestCommonSubsequence(int i, int j, string &text1, string &text2, vector<
     int len = 0;
     if (text1[i] == text2[j])
     {
-        len = longestCommonSubsequence(i + 1, j + 1, text1, text2, dp) + 1;
+        len = longestCommonSubsequence_(i + 1, j + 1, text1, text2, dp) + 1;
     }
     else
     {
-        len = max(longestCommonSubsequence(i + 1, j, text1, text2, dp), longestCommonSubsequence(i, j + 1, text1, text2, dp));
+        len = max(longestCommonSubsequence_(i + 1, j, text1, text2, dp), longestCommonSubsequence_(i, j + 1, text1, text2, dp));
     }
     return dp[i][j] = len;
+}
+int longestCommonSubsequence(string& text1, string& text2){
+    vector<vector<int>> dp(text1.size(),vector<int>(text2.size(),0));
+    return longestCommonSubsequence_(0,0,text1,text2,dp);
 }
 //*******************************************************************************
 int longestCommonSubsequence_DP(string text1, string text2)
