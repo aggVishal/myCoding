@@ -610,7 +610,6 @@ int minDistance(string word1, string word2)
     return minDist(0, 0, word1, word2, dp);
 }
 
-
 //Coin Change/Target Type problems
 int coinChangePermutation(vector<int> &arr, int tar, vector<int> &dp)
 {
@@ -626,8 +625,25 @@ int coinChangeCombination_DP(vector<int> &arr, int tar, vector<int> &dp)
 
 //https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
 
-int LinearEquation_DP(vector<int> &coeff, int rhs)
+int LinearEquation_DP(vector<int> &arr, int tar)
 {
+    vector<int> dp(tar + 1);
+    for (int i = 0; i <= tar; i++)
+    {
+        if (i == 0)
+        {
+            dp[i] == 1;
+            continue;
+        }
+        int count = 0;
+        for (int x = 0; x < arr.size(); x++)
+        {
+            if (i - arr[x] >= 0)
+                count += dp[i - arr[x]];
+        }
+        dp[i] = count;
+    }
+    return dp[tar];
 }
 
 //Leetcode 322 Coin Change
