@@ -713,11 +713,73 @@ int coinChange(vector<int> &coins, int tar)
     return (ans >= 1e8) ? -1 : ans;
 }
 
-int targetSum()
+int targetSum(int tar, int idx, vector<int> &arr, vector<vector<int>> &dp)
+{ // Finite coins and Number of combinations
+    if (tar == 0 || idx == arr.size())
+    {
+        if (tar == 0)
+            return dp[idx][tar] = 1;
+        return dp[idx][tar] = 0;
+    }
 
-    //Knapsack Problem========================================================================
+    if (dp[idx][tar] != 0)
+        return dp[idx][tar];
 
-    void solve()
+    int count = 0;
+    if (tar - arr[idx] >= 0)
+    {
+        count += targetSum(tar - arr[idx], idx + 1, arr, dp);
+    }
+    count += targetSum(tar, idx + 1, arr, dp);
+    return dp[idx][tar] = count;
+}
+
+int targetSum_02(int tar, int idx, vector<int> &arr, vector<vector<int>> &dp)
+{ // We are traversing reverse array
+    if (tar == 0 || idx == 0)
+    {
+        if (tar == 0)
+            return dp[idx][tar] = 1;
+        return dp[idx][tar] = 0;
+    }
+    if (dp[idx][tar] != 0)
+        return dp[idx][tar];
+
+    int count = 0;
+    if (tar - arr[idx - 1] >= 0)
+    {
+        count += targetSum_02(tar - arr[idx - 1], idx - 1, arr, dp);
+    }
+    count += targetSum_02(tar, idx - 1, arr, dp);
+    return dp[idx][tar] = count;
+}
+
+int printPathOfTargetSum(int tar, int idx, vector<int> &arr, vector<vector<int>> &dp, string ans)
+{ // We are traversing reverse array
+    if (tar == 0 || idx == 0)
+    {
+        if (tar == 0)
+        {
+            cout << ans << endl;
+            return dp[idx][tar] = 1;
+        }
+        return dp[idx][tar] = 0;
+    }
+    if (dp[idx][tar] != 0)
+        return dp[idx][tar];
+
+    int count = 0;
+    if (tar - arr[idx - 1] >= 0)
+    {
+        count += printPathOfTargetSum(tar - arr[idx - 1], idx - 1, arr, dp, ans + to_string(arr[idx - 1]));
+    }
+    count += printPathOfTargetSum(tar, idx - 1, arr, dp, ans);
+    return dp[idx][tar] = count;
+}
+
+//Knapsack Problem========================================================================
+
+void solve()
 {
     int n = 10;
     // vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));

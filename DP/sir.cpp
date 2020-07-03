@@ -1229,10 +1229,10 @@ void targetType()
 
     vector<int> arr{2, 3, 5, 7};
     int tar = 10;
-    // vector<vector<int>> dp(arr.size() + 1, vector<int>(tar + 1, 0));
-    vector<int> dp(tar + 1, 0);
-    // cout << targetSum(arr, 0, tar, dp) << endl;
-    cout << coinChangeCombination_DP(arr, tar, dp) << endl;
+    vector<vector<int>> dp(arr.size() + 1, vector<int>(tar + 1, 0));
+    // vector<int> dp(tar + 1, 0);
+    cout << targetSum(arr, 0, tar, dp) << endl;
+    // cout << coinChangeCombination_DP(arr, tar, dp) << endl;
     // cout << targetSum_02(arr, arr.size(), tar, dpTF) << endl;
     // targetSum_02DP(arr, tar);
 
