@@ -613,6 +613,21 @@ int minDistance(string word1, string word2)
 //Coin Change/Target Type problems
 int coinChangePermutation(vector<int> &arr, int tar, vector<int> &dp)
 {
+    if (tar == 0)
+    {
+        return dp[tar] = 1;
+    }
+    if (dp[tar] != 0)
+        return dp[tar];
+    int count = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (tar - arr[i] >= 0)
+        {
+            count += coinChangePermutation(arr, tar - arr[i], dp);
+        }
+    }
+    return dp[tar] = count;
 }
 
 int coinChangePermutation_DP(vector<int> &arr, int tar, vector<int> &dp)
