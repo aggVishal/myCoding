@@ -652,7 +652,7 @@ int coinChangePermutation_DP(vector<int> &arr, int tar, vector<int> &dp)
 }
 
 int coinChangeCombination_DP(vector<int> &arr, int tar) // by normal way it is done by using 2D dp but this is an optimised version
-{
+{                                                       // with Infinite coins of each
     vector<int> dp(tar + 1);
     dp[0] = 1;
     for (int ele : arr)
@@ -713,9 +713,11 @@ int coinChange(vector<int> &coins, int tar)
     return (ans >= 1e8) ? -1 : ans;
 }
 
-//Knapsack Problem========================================================================
+int targetSum()
 
-void solve()
+    //Knapsack Problem========================================================================
+
+    void solve()
 {
     int n = 10;
     // vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
