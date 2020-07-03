@@ -672,6 +672,19 @@ int coinChangeCombination_DP(vector<int> &arr, int tar) // by normal way it is d
 
 int LinearEquation_DP(vector<int> &arr, int tar)
 {
+    vector<int> dp(tar + 1);
+    dp[0] = 1;
+    for (int ele : arr)
+    {
+        for (int i = 0; i <= tar; i++)
+        {
+            if (i - ele >= 0)
+            {
+                dp[i] += dp[i - ele];
+            }
+        }
+    }
+    return dp[tar];
 }
 
 //Leetcode 322 Coin Change
