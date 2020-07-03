@@ -651,9 +651,21 @@ int coinChangePermutation_DP(vector<int> &arr, int tar, vector<int> &dp)
     return dp[tar];
 }
 
-int coinChangeCombination_DP(vector<int> &arr, int tar, vector<int> &dp)      // by normal way it is done by using 2D dp but this is an optimised version
+int coinChangeCombination_DP(vector<int> &arr, int tar) // by normal way it is done by using 2D dp but this is an optimised version
 {
-    
+    vector<int> dp(tar + 1);
+    dp[0] = 1;
+    for (int ele : arr)
+    {
+        for (int i = 0; i <= tar; i++)
+        {
+            if (i - ele >= 0)
+            {
+                dp[i] += dp[i - ele];
+            }
+        }
+    }
+    return dp[tar];
 }
 
 //https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
