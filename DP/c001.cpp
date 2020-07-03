@@ -585,6 +585,56 @@ int maxDotProduct_DP(vector<int> &num1, vector<int> &num2)
     return dp[0][0];
 }
 
+//Leetcode 72
+
+//Coin Change/Target Type problems
+int coinChangePermutation(vector<int> &arr, int tar, vector<int> &dp)
+{
+}
+
+int coinChangePermutation_DP(vector<int> &arr, int tar, vector<int> &dp)
+{
+}
+
+int coinChangeCombination_DP(vector<int> &arr, int tar, vector<int> &dp)
+{
+}
+
+//https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
+
+int LinearEquation_DP(vector<int> &coeff, int rhs)
+{
+}
+
+//Leetcode 322 Coin Change
+int coinChange_(vector<int> &coins, int tar, vector<int> &dp)
+{
+    if (tar == 0)
+        return dp[tar] = 0;
+
+    if (dp[tar] != 0)
+        return dp[tar];
+
+    int h = 1e8;
+    for (int i = 0; i < coins.size(); i++)
+    {
+        if (tar - coins[i] >= 0)
+        {
+            h = min(h, coinChange_(coins, tar - coins[i], dp));
+        }
+    }
+    return dp[tar] = h + 1;
+}
+int coinChange(vector<int> &coins, int tar)
+{
+    vector<int> dp(tar + 1);
+    int ans = coinChange_(coins, tar, dp);
+    return (ans >= 1e8) ? -1 : ans;
+}
+
+//Knapsack Problem========================================================================
+
+
 void solve()
 {
     int n = 10;
