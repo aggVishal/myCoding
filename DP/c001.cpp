@@ -585,7 +585,31 @@ int maxDotProduct_DP(vector<int> &num1, vector<int> &num2)
     return dp[0][0];
 }
 
-//Leetcode 72
+//Leetcode 72. Edit Distance
+int minDist(int i, int j, string &word1, string &word2, vector<vector<int>> &dp)
+{
+    if (j == word2.size())
+        return dp[i][j] = word1.size() - i;
+    if (i == word1.size())
+        return dp[i][j] = word2.size() - j;
+    if (dp[i][j] != 0)
+        return dp[i][j];
+
+    if (word1[i] == word2[j])
+        return dp[i][j] = minDist(i + 1, j + 1, word1, word2, dp);
+
+    int insert = minDist(i, j + 1, word1, word2, dp);
+    int replace = minDist(i + 1, j + 1, word1, word2, dp);
+    int del = minDist(i + 1, j, word1, word2, dp);
+
+    return dp[i][j] = min(insert, min(del, replace)) + 1;
+}
+int minDistance(string word1, string word2)
+{
+    vector<vector<int>> dp(word1.size() + 1, vector<int>(word2.size() + 1, 0));
+    return minDist(0, 0, word1, word2, dp);
+}
+
 
 //Coin Change/Target Type problems
 int coinChangePermutation(vector<int> &arr, int tar, vector<int> &dp)
@@ -634,7 +658,6 @@ int coinChange(vector<int> &coins, int tar)
 
 //Knapsack Problem========================================================================
 
-
 void solve()
 {
     int n = 10;
@@ -655,3 +678,5 @@ int main()
 {
     solve();
 }
+
+//   git add -A&git commit -m "update"&git push origin master
