@@ -617,16 +617,6 @@ int coinChangePermutation(vector<int> &arr, int tar, vector<int> &dp)
 
 int coinChangePermutation_DP(vector<int> &arr, int tar, vector<int> &dp)
 {
-}
-
-int coinChangeCombination_DP(vector<int> &arr, int tar, vector<int> &dp)
-{
-}
-
-//https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
-
-int LinearEquation_DP(vector<int> &arr, int tar)
-{
     vector<int> dp(tar + 1);
     for (int i = 0; i <= tar; i++)
     {
@@ -644,6 +634,16 @@ int LinearEquation_DP(vector<int> &arr, int tar)
         dp[i] = count;
     }
     return dp[tar];
+}
+
+int coinChangeCombination_DP(vector<int> &arr, int tar, vector<int> &dp)
+{
+}
+
+//https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
+
+int LinearEquation_DP(vector<int> &arr, int tar)
+{
 }
 
 //Leetcode 322 Coin Change
