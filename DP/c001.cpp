@@ -630,7 +630,7 @@ int coinChangePermutation(vector<int> &arr, int tar, vector<int> &dp)
     return dp[tar] = count;
 }
 
-int coinChangePermutation_DP(vector<int> &arr, int tar, vector<int> &dp)
+int coinChangePermutation_DP(vector<int> &arr, int tar)
 {
     vector<int> dp(tar + 1);
     for (int i = 0; i <= tar; i++)
@@ -657,7 +657,7 @@ int coinChangeCombination_DP(vector<int> &arr, int tar) // by normal way it is d
     dp[0] = 1;
     for (int ele : arr)
     {
-        for (int i = 0; i <= tar; i++)
+        for (int i = ele; i <= tar; i++)
         {
             if (i - ele >= 0)
             {
@@ -676,7 +676,7 @@ int LinearEquation_DP(vector<int> &arr, int tar)
     dp[0] = 1;
     for (int ele : arr)
     {
-        for (int i = 0; i <= tar; i++)
+        for (int i = ele; i <= tar; i++)
         {
             if (i - ele >= 0)
             {
@@ -786,20 +786,164 @@ int knapsack01(vector<int> &w, vector<int> &p, int weight, int n, vector<vector<
 {
 }
 
-int unbounded_Knapsack(vector<int> &w, vector<int> &p, int weight)   // GFG
+int unbounded_Knapsack(vector<int> &w, vector<int> &p, int weight) // GFG
 {
 }
 
 //Leetcode 416
 //Leetcode 494
 
-
 //********************************************************************************
 
+// Lonogest Increasing Subsequence type
+int LIS_leftToRight(vector<int> &nums)
+{
+    vector<int> dp(nums.size() + 1);
+    int Omax = 0;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        dp[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (nums[j] < nums[i])
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        Omax = max(Omax, dp[i]);
+    }
+    return Omax;
+}
+int LDS_RightToLeft(vector<int> &nums)
+{
+    vector<int> dp(nums.size() + 1);
+    int Omax = 0;
+    for (int i = nums.size() - 1; i >= 0; i--)
+    {
+        dp[i] = 1;
+        for (int j = i + 1; j < nums.size(); j++)
+        {
+            if (nums[j] > nums[i])
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        Omax = max(Omax, dp[i]);
+    }
+    return Omax;
+}
+int LIS_RightToLeft(vector<int> &nums)
+{
+    vector<int> dp(nums.size() + 1);
+    int Omax = 0;
+    for (int i = nums.size() - 1; i >= 0; i--)
+    {
+        dp[i] = 1;
+        for (int j = i + 1; j < nums.size(); j++)
+        {
+            if (nums[j] < nums[i])
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        Omax = max(Omax, dp[i]);
+    }
+    return Omax;
+}
+int LDS_leftToRight(vector<int> &nums)
+{
+    vector<int> dp(nums.size() + 1);
+    int Omax = 0;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        dp[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (nums[j] > nums[i])
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        Omax = max(Omax, dp[i]);
+    }
+    return Omax;
+}
 
+
+int bitonic(vector<int> &nums)
+{
+    int N = nums.size();
+    vector<int> lis_L2R(N);
+    vector<int> lis_R2L(N);
+    int Omax = 0;
+
+    for (int i = 0; i < nums.size(); i++)
+    {
+        lis_L2R[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (nums[j] < nums[i])
+            {
+                lis_L2R[i] = max(lis_L2R[i], lis_L2R[j] + 1);
+            }
+        }
+    }
+    for (int i = nums.size() - 1; i >= 0; i--)
+    {
+        lis_R2L[i] = 1;
+        for (int j = i + 1; j < nums.size(); j++)
+        {
+            if (nums[j] < nums[i])
+            {
+                lis_R2L[i] = max(lis_R2L[i], lis_R2L[j] + 1);
+            }
+        }
+    }
+    for (int i = 0; i < N; i++)
+    {
+        Omax = max(Omax, lis_R2L[i] + lis_L2R[i] - 1);
+    }
+    return Omax;
+}
+
+int INV_bitonic(vector<int> &nums)
+{
+    int N = nums.size();
+    vector<int> lds_L2R(N);
+    vector<int> lds_R2L(N);
+    int Omax = 0;
+
+    for (int i = 0; i < nums.size(); i++)
+    {
+        lds_L2R[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (nums[j] > nums[i])
+            {
+                lds_L2R[i] = max(lds_L2R[i], lds_L2R[j] + 1);
+            }
+        }
+    }
+    for (int i = nums.size() - 1; i >= 0; i--)
+    {
+        lds_R2L[i] = 1;
+        for (int j = i + 1; j < nums.size(); j++)
+        {
+            if (nums[j] > nums[i])
+            {
+                lds_R2L[i] = max(lds_R2L[i], lds_R2L[j] + 1);
+            }
+        }
+    }
+    for (int i = 0; i < N; i++)
+    {
+        Omax = max(Omax, lds_R2L[i] + lds_L2R[i] - 1);
+    }
+    return Omax;
+}
 void solve()
 {
-    int n = 10;
+    // int n = 10;
     // vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
     // vector<int> dp(n + 1, 0);
     // cout << MP_jumps(0, 0, n - 1, n - 1, dp) << endl;
@@ -812,6 +956,8 @@ void solve()
     // cout << dice_randomDP(0, n, ar, dp);
 
     // cout << partition_in_K_subset(3, 2);
+    vector<int> arr={1,2,5,8,6,1,1,0,50,4,18};
+    cout<<INV_bitonic(arr)<<endl;
 }
 int main()
 {
