@@ -777,7 +777,22 @@ int printPathOfTargetSum(int tar, int idx, vector<int> &arr, vector<vector<int>>
     return dp[idx][tar] = count;
 }
 
+void targetSum_02DP(vector<int> &coins, int tar)
+{
+}
+
 //Knapsack Problem========================================================================
+int knapsack01(vector<int> &w, vector<int> &p, int weight, int n, vector<vector<int>> &dp)
+{
+}
+
+int unbounded(vector<int> &w, vector<int> &p, int weight)
+{
+}
+
+//Leetcode 416
+//Leetcode 494
+
 
 void solve()
 {
