@@ -781,17 +781,20 @@ void targetSum_02DP(vector<int> &coins, int tar)
 {
 }
 
-//Knapsack Problem========================================================================
+//Knapsack Problem (GFG) ========================================================================
 int knapsack01(vector<int> &w, vector<int> &p, int weight, int n, vector<vector<int>> &dp)
 {
 }
 
-int unbounded(vector<int> &w, vector<int> &p, int weight)
+int unbounded_Knapsack(vector<int> &w, vector<int> &p, int weight)   // GFG
 {
 }
 
 //Leetcode 416
 //Leetcode 494
+
+
+//********************************************************************************
 
 
 void solve()
