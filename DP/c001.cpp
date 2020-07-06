@@ -712,9 +712,11 @@ int coinChange(vector<int> &coins, int tar)
     int ans = coinChange_(coins, tar, dp);
     return (ans >= 1e8) ? -1 : ans;
 }
+//*******************************************************************************************
 
+// Finite coins and Number of combinations
 int targetSum(int tar, int idx, vector<int> &arr, vector<vector<int>> &dp)
-{ // Finite coins and Number of combinations
+{
     if (tar == 0 || idx == arr.size())
     {
         if (tar == 0)
@@ -754,8 +756,8 @@ int targetSum_02(int tar, int idx, vector<int> &arr, vector<vector<int>> &dp)
     return dp[idx][tar] = count;
 }
 
-int printPathOfTargetSum(int tar, int idx, vector<int> &arr, vector<vector<int>> &dp, string ans)
-{ // We are traversing reverse array
+int printPathOfTargetSum(int tar, int idx, vector<int> &arr, vector<vector<bool>> &dp, string ans)
+{ //Back engine
     if (tar == 0 || idx == 0)
     {
         if (tar == 0)
@@ -769,27 +771,95 @@ int printPathOfTargetSum(int tar, int idx, vector<int> &arr, vector<vector<int>>
         return dp[idx][tar];
 
     int count = 0;
-    if (tar - arr[idx - 1] >= 0)
+    if (tar - arr[idx - 1] >= 0 && dp[idx - 1][tar - arr[idx - 1]])
     {
         count += printPathOfTargetSum(tar - arr[idx - 1], idx - 1, arr, dp, ans + to_string(arr[idx - 1]));
     }
-    count += printPathOfTargetSum(tar, idx - 1, arr, dp, ans);
+    if (dp[idx - 1][tar])
+    {
+        count += printPathOfTargetSum(tar, idx - 1, arr, dp, ans);
+    }
     return dp[idx][tar] = count;
 }
 
+// using DP, traversing reverse, printing path by back engine
 void targetSum_02DP(vector<int> &coins, int tar)
 {
+    int Tar = tar;
+    vector<vector<bool>> dp(coins.size() + 1, vector<bool>(tar + 1, false));
+    for (int idx = 0; idx <= coins.size(); idx++)
+    {
+        for (for (tar = 0; tar <= Tar; tar++))
+        {
+            if (tar == 0 || idx == 0)
+            {
+                if (tar == 0)
+                {
+                    dp[idx][tar] = true;
+                }
+                continue;
+            }
+            if (dp[idx][tar] != 0)
+            {
+                dp[idx][tar];
+                continue;
+            }
+            int res = false;
+            if (tar - arr[idx - 1] >= 0)
+            {
+                dp[idx][tar] = dp[idx - 1][tar - arr[idx - 1]];
+            }
+
+            dp[idx][tar] = dp[idx][tar] || dp[idx - 1][tar];
+        }
+    }
+    cout << printPathOfTargetSum(coins, coins.size(), Tar, "", dp) << endl;
 }
 
-//Knapsack Problem (GFG) ========================================================================
-int knapsack01(vector<int> &w, vector<int> &p, int weight, int n, vector<vector<int>> &dp)
+// Knapsack 0-1 Problem (GFG) ========================================================================
+// https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/
+int knapsack01(vector<int> &w, vector<int> &v, int weight, int n, vector<vector<int>> &dp)
 {
+    if (weight == 0 || n == 0)
+    {
+        return dp[n][weight] = 0;
+    }
+    if (dp[n][weight] != 0)
+        return dp[n][weight];
+
+    int maxval = 0;
+    if (weight - w[n - 1] >= 0)
+    {
+        maxval = max(maxval, knapsack01(w, v, weight - w[n - 1], n - 1, dp) + v[n - 1]);
+    }
+    maxval = max(maxval, knapsack01(w, v, weight, n - 1, dp));
+    return dp[n][weight] = maxval;
 }
 
-int unbounded_Knapsack(vector<int> &w, vector<int> &p, int weight) // GFG
+// Unbounded knapsack = knapsack 0-1  +  infinite coins
+// https://practice.geeksforgeeks.org/problems/knapsack-with-duplicate-items/0
+int unbounded_Knapsack_2D_dp(vector<int> &w, vector<int> &v, int weight, int n, vector<vector<int>> &dp) // using 2D dp
 {
+    if (weight == 0 || n == 0)
+    {
+        return dp[n][weight] = 0;
+    }
+    if (dp[n][weight] != 0)
+        return dp[n][weight];
+
+    int maxval = 0;
+    if (weight - w[n - 1] >= 0)
+    {
+        maxval = max(maxval, max(unbounded_Knapsack(w, v, weight - w[n - 1], n - 1, dp) + v[n - 1], unbounded_Knapsack(w, v, weight - w[n - 1], n, dp) + v[n - 1]));
+    }
+    maxval = max(maxval, unbounded_Knapsack(w, v, weight, n - 1, dp));
+    return dp[n][weight] = maxval;
 }
 
+int unbounded_Knapsack_1D_dp(vector<int> &w, vector<int> &v, int weight, int n, vector<vector<int>> &dp) // using 1D dp (optimised)
+{
+    
+}
 //Leetcode 416
 //Leetcode 494
 
@@ -868,7 +938,6 @@ int LDS_leftToRight(vector<int> &nums)
     }
     return Omax;
 }
-
 
 int bitonic(vector<int> &nums)
 {
@@ -955,12 +1024,14 @@ int LIS_leftToRight(vector<int> &nums)
             if (nums[j] < nums[i])
             {
                 // dp[i] = max(dp[i], dp[j] + 1);
-                if(dp[i]==dp[j]+1){
-`                   no[j]++;
+                if (dp[i] == dp[j] + 1)
+                {
+                    ` no[j]++;
                 }
-                else if(dp[i]<dp[j]+1){
-                    no[j]=1;
-                    dp[i]=dp[j]+1;
+                else if (dp[i] < dp[j] + 1)
+                {
+                    no[j] = 1;
+                    dp[i] = dp[j] + 1;
                 }
             }
         }
@@ -983,8 +1054,8 @@ void solve()
     // cout << dice_randomDP(0, n, ar, dp);
 
     // cout << partition_in_K_subset(3, 2);
-    vector<int> arr={1,2,5,8,6,1,1,0,50,4,18};
-    cout<<INV_bitonic(arr)<<endl;
+    vector<int> arr = {1, 2, 5, 8, 6, 1, 1, 0, 50, 4, 18};
+    cout << INV_bitonic(arr) << endl;
 }
 int main()
 {
