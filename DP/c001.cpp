@@ -1157,37 +1157,33 @@ int Max_Sum_Bitonic_Subseq(vector<int> &ar)
 
 // Minimum number of deletions to make a sorted sequence
 // https://practice.geeksforgeeks.org/problems/minimum-number-of-deletions-to-make-a-sorted-sequence/0
+int Min_del(vector<int> &ar)
+{
+    int N = ar.size();
+    vector<int> dp(N, 1);
+    int max_ = 0;
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (ar[j] < ar[i])
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        max_ = max(max_, dp[i]);
+    }
+    return N - max_;
+}
 
 // leetcode 354. Russian Doll Problem
 
-int LIS_leftToRight(vector<int> &nums)
-{
-    vector<int> dp(nums.size() + 1);
-    vector<int> no(nums.size() + 1);
-    int Omax = 0;
-    for (int i = 0; i < nums.size(); i++)
-    {
-        dp[i] = 1;
-        for (int j = i - 1; j >= 0; j--)
-        {
-            if (nums[j] < nums[i])
-            {
-                // dp[i] = max(dp[i], dp[j] + 1);
-                if (dp[i] == dp[j] + 1)
-                {
-                    no[j]++;
-                }
-                else if (dp[i] < dp[j] + 1)
-                {
-                    no[j] = 1;
-                    dp[i] = dp[j] + 1;
-                }
-            }
-        }
-        Omax = max(Omax, dp[i]);
-    }
-    return Omax;
-}
+// leetcode 673. Number of Longest Increasing Subsequence
+
+// leetcode 1027. Longest Arithmetic Sequence
+
+// leetcode 1235. Maximum Profit in Job Scheduling
+
 void solve()
 {
     // int n = 10;
