@@ -657,7 +657,7 @@ int coinChangeCombination_DP(vector<int> &arr, int tar) // by normal way it is d
     dp[0] = 1;
     for (int ele : arr)
     {
-        for (int i = ele; i <= tar; i++)
+        for (int i = ele; i <= tar; i++) //normally loop is started from 0
         {
             if (i - ele >= 0)
             {
@@ -856,9 +856,21 @@ int unbounded_Knapsack_2D_dp(vector<int> &w, vector<int> &v, int weight, int n, 
     return dp[n][weight] = maxval;
 }
 
-int unbounded_Knapsack_1D_dp(vector<int> &w, vector<int> &v, int weight, int n, vector<vector<int>> &dp) // using 1D dp (optimised)
-{
-    
+int unbounded_Knapsack_1D_dp(vector<int> &w, vector<int> &v, int weight) // using 1D dp (optimised)
+{                                                                        // dry run question (you cannot understand by only see code)
+    vector<int> dp(weight + 1);
+    dp[0] = 0;
+    for (int i = 0; i < w.size(); i++)
+    {
+        for (int we = w[i]; we <= weight; we++) //normally loop is started from 0
+        {
+            if (we - w[i] >= 0)
+            {
+                dp[we] = max(dp[we], dp[we - w[i]] + v[we]);
+            }
+        }
+    }
+    return dp[weight];
 }
 //Leetcode 416
 //Leetcode 494
