@@ -667,6 +667,14 @@ int coinChangeCombination_DP(vector<int> &arr, int tar) // by normal way it is d
     }
     return dp[tar];
 }
+int coinChangeCombination_DP(vector<int> &arr, int tar, vector<int> &dp) // finite coin combination using 1D dp
+{                                                                        // dry run question
+    dp[0] = 1;
+    int Tar = tar;
+    for (int ele : arr)
+        for (int tar = Tar; tar >= ele; tar--)
+            dp[tar] += dp[tar - ele];
+}
 
 //https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
 
@@ -907,6 +915,8 @@ bool canPartition(vector<int> &nums)
     vector<vector<int>> dp(nums.size() + 1, vector<int>(sum + 1, -1));
     return knapsack0_1(nums, nums.size(), sum, dp);
 }
+//******************************************************************************
+
 //Leetcode 494. Target Sum
 int knapsack_(vector<int> &nums, int tar, int osum, int sum, int idx, vector<vector<int>> &dp)
 {
