@@ -907,7 +907,33 @@ bool canPartition(vector<int> &nums)
     vector<vector<int>> dp(nums.size() + 1, vector<int>(sum + 1, -1));
     return knapsack0_1(nums, nums.size(), sum, dp);
 }
-//Leetcode 494
+//Leetcode 494. Target Sum
+int knapsack_(vector<int> &nums, int tar, int osum, int sum, int idx, vector<vector<int>> &dp)
+{
+    if (idx == 0)
+    {
+        if (tar == osum)
+            return dp[idx][tar + sum] = 1;
+        return dp[idx][sum + tar] = 0;
+    }
+    if (dp[idx][sum + tar] != -1)
+        return dp[idx][sum + tar];
+
+    int pos = knapsack_(nums, tar + nums[idx - 1], osum, sum, idx - 1, dp);
+    int neg = knapsack_(nums, tar - nums[idx - 1], osum, sum, idx - 1, dp);
+
+    return dp[idx][sum + tar] = pos + neg;
+}
+int findTargetSumWays(vector<int> &nums, int osum)
+{
+    int sum = 0;
+    for (int i : nums)
+    {
+        sum += i;
+    }
+    vector<vector<int>> dp(nums.size() + 1, vector<int>(2 * sum + 1, -1));
+    return knapsack_(nums, 0, osum, sum, nums.size(), dp);
+}
 
 //********************************************************************************
 
