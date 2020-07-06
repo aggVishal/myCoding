@@ -872,7 +872,41 @@ int unbounded_Knapsack_1D_dp(vector<int> &w, vector<int> &v, int weight) // usin
     }
     return dp[weight];
 }
-//Leetcode 416
+
+//Leetcode 416. Partition Equal Subset Sum
+int knapsack0_1(vector<int> &nums, int idx, int sum, vector<vector<int>> &dp)
+{
+    if (sum == 0 || idx == 0)
+    {
+        if (sum == 0)
+            return dp[idx][sum] = 1;
+        return dp[idx][sum] = 0;
+    }
+    if (dp[idx][sum] != -1)
+        return dp[idx][sum];
+    bool res = false;
+    if (sum - nums[idx - 1] >= 0)
+    {
+        res = res || knapsack0_1(nums, idx - 1, sum - nums[idx - 1], dp);
+    }
+    res = res || knapsack0_1(nums, idx - 1, sum, dp);
+    return dp[idx][sum] = res;
+}
+bool canPartition(vector<int> &nums)
+{
+    int sum = 0;
+    for (int i : nums)
+    {
+        sum += i;
+    }
+    if (sum % 2 != 0)
+    {
+        return false;
+    }
+    sum /= 2;
+    vector<vector<int>> dp(nums.size() + 1, vector<int>(sum + 1, -1));
+    return knapsack0_1(nums, nums.size(), sum, dp);
+}
 //Leetcode 494
 
 //********************************************************************************
