@@ -1020,8 +1020,11 @@ int LDS_leftToRight(vector<int> &nums)
     }
     return Omax;
 }
+//************************
 
-int bitonic(vector<int> &nums)
+// Longest Bitonic Subsequence (LBS)
+
+int bitonic(vector<int> &nums) // https://practice.geeksforgeeks.org/problems/longest-bitonic-subsequence/0
 {
     int N = nums.size();
     vector<int> lis_L2R(N);
@@ -1057,7 +1060,7 @@ int bitonic(vector<int> &nums)
     return Omax;
 }
 
-int INV_bitonic(vector<int> &nums)
+int INV_bitonic(vector<int> &nums) // you can check the notes
 {
     int N = nums.size();
     vector<int> lds_L2R(N);
@@ -1093,6 +1096,70 @@ int INV_bitonic(vector<int> &nums)
     return Omax;
 }
 
+// Maximum sum increasing subsequence
+// https://practice.geeksforgeeks.org/problems/maximum-sum-increasing-subsequence/0
+int max_sum_inc_subseq(vector<int> &ar)
+{
+    int N = ar.size();
+    vector<int> dp(N);
+    int maxSum = 0;
+    for (int i = 0; i < N; i++)
+    {
+        dp[i] = ar[i];
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (ar[j] < ar[i])
+            {
+                dp[i] = max(dp[i], dp[j] + ar[i]);
+            }
+        }
+        maxSum = max(maxSum, dp[i]);
+    }
+    return maxSum;
+}
+
+// Maximum Sum Bitonic Subsequence
+// https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence/0
+int Max_Sum_Bitonic_Subseq(vector<int> &ar)
+{
+    int N = ar.size();
+    vector<int> lis_L2R(N);
+    vector<int> lis_R2L(N);
+    for (int i = 0; i < N; i++)
+    {
+        lis_L2R[i] = ar[i];
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (ar[j] < ar[i])
+            {
+                lis_L2R[i] = max(lis_L2R[i], lis_L2R[j] + ar[i]);
+            }
+        }
+    }
+    for (int i = N - 1; i >= 0; i--)
+    {
+        lis_R2L[i] = ar[i];
+        for (int j = i + 1; j < N; j++)
+        {
+            if (ar[j] < ar[i])
+            {
+                lis_R2L[i] = max(lis_R2L[i], lis_R2L[j] + ar[i]);
+            }
+        }
+    }
+    int maxSum = 0;
+    for (int i = 0; i < N; i++)
+    {
+        maxSum = max(maxSum, lis_L2R[i] + lis_R2L[i] - ar[i]);
+    }
+    return maxSum;
+}
+
+// Minimum number of deletions to make a sorted sequence
+// https://practice.geeksforgeeks.org/problems/minimum-number-of-deletions-to-make-a-sorted-sequence/0
+
+// leetcode 354. Russian Doll Problem
+
 int LIS_leftToRight(vector<int> &nums)
 {
     vector<int> dp(nums.size() + 1);
@@ -1108,7 +1175,7 @@ int LIS_leftToRight(vector<int> &nums)
                 // dp[i] = max(dp[i], dp[j] + 1);
                 if (dp[i] == dp[j] + 1)
                 {
-                    ` no[j]++;
+                    no[j]++;
                 }
                 else if (dp[i] < dp[j] + 1)
                 {
