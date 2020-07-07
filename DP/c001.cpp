@@ -696,6 +696,8 @@ int LinearEquation_DP(vector<int> &arr, int tar)
     return dp[tar];
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+
 //Leetcode 322 Coin Change
 int coinChange_(vector<int> &coins, int tar, vector<int> &dp)
 {
@@ -721,7 +723,6 @@ int coinChange(vector<int> &coins, int tar)
     int ans = coinChange_(coins, tar, dp);
     return (ans >= 1e8) ? -1 : ans;
 }
-//*******************************************************************************************
 
 // Finite coins and Number of combinations
 int targetSum(int tar, int idx, vector<int> &arr, vector<vector<int>> &dp)
@@ -946,7 +947,7 @@ int findTargetSumWays(vector<int> &nums, int osum)
     return knapsack_(nums, 0, osum, sum, nums.size(), dp);
 }
 
-//********************************************************************************
+//------------------------------------------------------------------------------------------------------------------------------
 
 // Lonogest Increasing Subsequence type
 int LIS_leftToRight(vector<int> &nums)
@@ -1158,6 +1159,7 @@ int Max_Sum_Bitonic_Subseq(vector<int> &ar)
 
 // Minimum number of deletions to make a sorted sequence
 // https://practice.geeksforgeeks.org/problems/minimum-number-of-deletions-to-make-a-sorted-sequence/0
+
 int Min_del(vector<int> &ar)
 {
     int N = ar.size();
@@ -1177,7 +1179,7 @@ int Min_del(vector<int> &ar)
     return N - max_;
 }
 
-// leetcode 354. Russian Doll Problem
+// leetcode 354. Russian Doll Envelopes
 int maxEnvelopes(vector<vector<int>> &env)
 {
     std::ios_base::sync_with_stdio(false);
@@ -1209,12 +1211,107 @@ int maxEnvelopes(vector<vector<int>> &env)
 }
 
 // leetcode 673. Number of Longest Increasing Subsequence
+int findNumberOfLIS(vector<int> &ar)
+{
+    if (ar.size() <= 1)
+        return ar.size();
+
+    vector<int> dp(ar.size());
+    vector<int> count(ar.size());
+    int maxCount = 0;
+    int maxLen = 0;
+
+    for (int i = 0; i < ar.size(); i++)
+    {
+        dp[i] = 1;
+        count[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (ar[j] < ar[i])
+            {
+                if (dp[i] < dp[j] + 1)
+                {
+                    count[i] = count[j];
+                    dp[i] = dp[j] + 1;
+                }
+                else if (dp[i] == dp[j] + 1)
+                {
+                    count[i] += count[j];
+                }
+            }
+        }
+        if (dp[i] > maxLen)
+        {
+            maxCount = count[i];
+            maxLen = dp[i];
+        }
+        else if (dp[i] == maxLen)
+        {
+            maxCount += count[i];
+        }
+    }
+    return maxCount;
+}
 
 // leetcode 1027. Longest Arithmetic Sequence
 
 // leetcode 1235. Maximum Profit in Job Scheduling
 
 //---------------------------------------------------------------------------------------------------------------------------------
+
+//cut Type problems
+
+int MCM_rec(vector<int> &arr, int si, int ei, vector<vector<int>> &dp)
+{
+    if (si + 1 == ei)
+    {
+        return dp[si][ei] = 0;
+    }
+
+    if (dp[si][ei] != -1)
+        return dp[si][ei];
+
+    int ans = 1e8;
+    for (int cut = si + 1; cut < ei; cut++)
+    {
+        int leftMatrix = MCM_rec(arr, si, cut, dp);
+        int rightMatrix = MCM_rec(arr, cut, ei, dp);
+        int cost = leftMatrix + (arr[si] * arr[cut] * arr[ei]) + rightMatrix;
+        ans = min(ans, cost);
+    }
+    return dp[si][ei] = ans;
+}
+int MCM_dp(vector<int> &arr)
+{
+    vector<vector<int>> dp(arr.size(), vector<int>(arr.size(), -1));
+    for (int gap = 1; gap < arr.size(); gap++)
+    {
+        for (int si = 0, ei = gap; ei < arr.size(); si++, ei++)
+        {
+            if (si + 1 == ei)
+            {
+                return dp[si][ei] = 0;
+            }
+
+            if (dp[si][ei] != -1)
+                return dp[si][ei];
+
+            int ans = 1e8;
+            for (int cut = si + 1; cut < ei; cut++)
+            {
+                int leftMatrix = MCM_rec(arr, si, cut, dp);
+                int rightMatrix = MCM_rec(arr, cut, ei, dp);
+                int cost = leftMatrix + (arr[si] * arr[cut] * arr[ei]) + rightMatrix;
+                ans = min(ans, cost);
+            }
+            return dp[si][ei] = ans;
+        }
+    }
+}
+
+// Optimal Binary Search Tree
+// https://www.geeksforgeeks.org/optimal-binary-search-tree-dp-24/
+
 void solve()
 {
     // int n = 10;
