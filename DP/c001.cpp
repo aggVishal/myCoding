@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 // //mazepath series...
@@ -1177,6 +1178,35 @@ int Min_del(vector<int> &ar)
 }
 
 // leetcode 354. Russian Doll Problem
+int maxEnvelopes(vector<vector<int>> &env)
+{
+    std::ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    sort(env.begin(), env.end(), [](vector<int> &a, vector<int> &b) {
+        if (a[0] == b[0])
+        {
+            return b[1] < a[1];
+        }
+        return a[0] < b[0];
+    });
+    int n = env.size();
+    vector<int> dp(n, 1);
+    int maxAns = 0;
+    for (int i = 0; i < env.size(); i++)
+    {
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (env[j][1] < env[i][1])
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        maxAns = max(maxAns, dp[i]);
+    }
+    return maxAns;
+}
 
 // leetcode 673. Number of Longest Increasing Subsequence
 
