@@ -1259,7 +1259,70 @@ int findNumberOfLIS(vector<int> &ar)
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
+//Leetcode 91. Decode ways
+int numDecoding_(int idx, string &s, vector<int> &dp)
+{
+    if (idx == s.size())
+    {
+        return dp[idx] = 1;
+    }
+    if (dp[idx] != 0)
+        return dp[idx];
 
+    int count = 0;
+    if (s[idx] > '0')
+    {
+        count += numDecoding_(idx + 1, s, dp);
+
+        if (idx < s.size() - 1)
+        {
+            int num = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
+            if (num <= 26)
+            {
+                count += numDecoding_(idx + 2, s, dp);
+            }
+        }
+    }
+    return dp[idx] = count;
+}
+int numDecodings(string s)
+{
+    vector<int> dp(s.length() + 1);
+    return numDecoding_(0, s, dp);
+}
+//******************************************
+
+int numDecodings02(string s)
+{
+    int a = 0;
+    int b = 1;
+    for (int i = s.size() - 1; i >= 0; i--)
+    {
+        int tempB = b;
+        int tempA = a;
+        if (s[i] != '0')
+        {
+            a = b;
+            if (i < s.size() - 1)
+            {
+                int num = (s[i] - '0') * 10 + (s[i + 1] - '0');
+                if (num <= 26)
+                {
+                    a += tempA;
+                }
+            }
+        }
+        else
+        {
+            a = 0;
+        }
+        b = a;
+        a = tempB;
+    }
+    return b;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------
 
 void solve()
 {
