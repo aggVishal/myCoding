@@ -1266,23 +1266,24 @@ int numDecoding_(int idx, string &s, vector<int> &dp)
     {
         return dp[idx] = 1;
     }
-    if (dp[idx] != 0)
+    if (dp[idx] != -1)
         return dp[idx];
 
-    int count = 0;
-    if (s[idx] > '0')
-    {
-        count += numDecoding_(idx + 1, s, dp);
+    if (s[idx] == '0')
+        return dp[idx] = 0;
 
-        if (idx < s.size() - 1)
+    int count = 0;
+    count += numDecoding_(idx + 1, s, dp);
+
+    if (idx < s.size() - 1)
+    {
+        int num = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
+        if (num <= 26)
         {
-            int num = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
-            if (num <= 26)
-            {
-                count += numDecoding_(idx + 2, s, dp);
-            }
+            count += numDecoding_(idx + 2, s, dp);
         }
     }
+
     return dp[idx] = count;
 }
 int numDecodings(string s)
@@ -1321,6 +1322,124 @@ int numDecodings02(string s)
     }
     return b;
 }
+
+// Count subsequences of type a^i b^j c^k (GFG)
+// https://practice.geeksforgeeks.org/problems/count-subsequences-of-type-ai-bj-ck/0
+int Count_subseq_aibjck(string &str)
+{
+    int acount = 0;
+    int bcount = 0;
+    int ccount = 0;
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (str[i] == 'a')
+        {
+            acount += acount + 1;
+        }
+        else if (str[i] == 'b')
+        {
+            bcount += bcount + acount;
+        }
+        else if (str[i] == 'c')
+        {
+            ccount += ccount + bcount;
+        }
+    }
+    return ccount;
+}
+
+// Leetcode 940. Distinct Subsequences II
+int distinctSubseqII(string str)
+{
+    int mod = 1e9 + 7;
+    vector<int> lastOcc(26, -1);
+    vector<int> ans(str.size() + 1, 1);
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (lastOcc[str[i] - 'a'] == -1)
+        {
+            ans[i + 1] = (2 * (ans[i] % mod)) % mod;
+        }
+        else
+        {
+            ans[i + 1] = (2 * (ans[i] % mod)) % mod - (ans[lastOcc[str[i] - 'a']] % mod) + mod;
+        }
+        lastOcc[str[i] - 'a'] = i;
+    }
+    return ((ans[str.size()] % mod) - 1) % mod;
+}
+
+// Leetcode 639. Decode Ways II
+int mod = 1e9 + 7;
+long numDecodings_(int idx, string &s, vector<long> &dp)
+{
+    if (idx == s.size())
+    {
+        return dp[idx] = 1;
+    }
+    if (dp[idx] != -1)
+        return dp[idx];
+    long count = 0;
+
+    if (s[idx] == '*')
+    {
+        count = (count % mod + 9 * numDecodings_(idx + 1, s, dp) % mod) % mod;
+        if (idx < s.size() - 1)
+        {
+            if (s[idx + 1] == '*')
+            {
+                count = (count % mod + 15 * numDecodings_(idx + 2, s, dp) % mod) % mod;
+            }
+            else
+            {
+                if (s[idx + 1] >= '0' && s[idx + 1] <= '6')
+                {
+                    count = (count % mod + 2 * numDecodings_(idx + 2, s, dp) % mod) % mod;
+                }
+                else
+                {
+                    count = (count % mod + numDecodings_(idx + 2, s, dp) % mod) % mod;
+                }
+            }
+        }
+    }
+    else if (s[idx] != '0')
+    {
+        count = (count % mod + numDecodings_(idx + 1, s, dp) % mod) % mod;
+        if (idx < s.size() - 1)
+        {
+            if (s[idx + 1] == '*')
+            {
+                if (s[idx] == '1')
+                {
+                    count = (count % mod + 9 * numDecodings_(idx + 2, s, dp) % mod) % mod;
+                }
+                else if (s[idx] == '2')
+                {
+                    count = (count % mod + 6 * numDecodings_(idx + 2, s, dp) % mod) % mod;
+                }
+            }
+            else
+            {
+                int num = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
+                if (num <= 26)
+                {
+                    count = (count % mod + numDecodings_(idx + 2, s, dp) % mod) % mod;
+                }
+            }
+        }
+    }
+    return dp[idx] = count;
+}
+
+int numDecodings(string &s)
+{
+    vector<long> dp(s.size() + 1, -1);
+    return numDecodings_(0, s, dp);
+}
+//*************************************
+
+
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
