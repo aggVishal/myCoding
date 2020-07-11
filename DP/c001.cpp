@@ -3,6 +3,56 @@
 #include <algorithm>
 using namespace std;
 
+void display(vector<int> &arr)
+{
+    for (int ele : arr)
+        cout << ele << " ";
+    cout << endl;
+}
+
+void display2D(vector<vector<int>> &arr)
+{
+    for (vector<int> ar : arr)
+        display(ar);
+    cout << endl;
+}
+
+// fibonacci sequence
+
+int fibo_rec(int n, vector<int> &dp)
+{
+    if (n <= 1)
+        return dp[n] = n;
+    if (dp[n] != -1)
+        return dp[n];
+    return dp[n] = fibo_rec(n - 1, dp) + fibo_rec(n - 2, dp);
+}
+int fibo_dp(int n)
+{
+    vector<int> dp(n + 1, -1);
+    for (int i = 0; i <= n; i++)
+    {
+        if (n <= 1)
+        {
+            dp[n] = n;
+            continue;
+        }
+        dp[n] = dp[n - 1] + dp[n - 2];
+    }
+}
+int fibo_btr(int n)
+{
+    int a = 0;
+    int b = 1;
+    for (int i = 0; i < n; i++)
+    {
+        int temp = b;
+        b = a + b;
+        a = temp;
+    }
+    return a;
+}
+
 //mazepath series...
 
 int MP_jumps(int sr, int sc, int er, int ec, vector<vector<int>> &dp)
@@ -152,7 +202,7 @@ int dice_randomDP(int s, int e, vector<int> &ar, vector<int> &dp)
 }
 
 //Leetcode 70. Climbing Stairs
-int helper(int s, int e, vector<int> &dp)
+int climbStairs_(int s, int e, vector<int> &dp)
 {
     if (s == e)
         return dp[s] = 1;
@@ -161,16 +211,16 @@ int helper(int s, int e, vector<int> &dp)
 
     int count = 0;
     if (s + 1 <= e)
-        count += helper(s + 1, e, dp);
+        count += climbStairs_(s + 1, e, dp);
     if (s + 2 <= e)
-        count += helper(s + 2, e, dp);
+        count += climbStairs_(s + 2, e, dp);
 
     return dp[s] = count;
 }
 int climbStairs(int n)
 {
     vector<int> dp(n + 1);
-    return helper(0, n, dp);
+    return climbStairs_(0, n, dp);
 }
 
 // Leetcode 746. Min Cost Climbing Stairs
@@ -1439,13 +1489,80 @@ int numDecodings(string &s)
 }
 //*************************************
 
+// Leetcode 44. Wildcard Maching
+bool isMatch_(string &s, int si, string &p, int pi, vector<vector<int>> &dp)
+{
+    if (si == s.size() || pi == p.size())
+    {
+        if (si == s.size() && pi == p.size())
+        {
+            return dp[si][pi] = true;
+        }
+        if (pi != p.size())
+        {
+            while (p[pi] == '*')
+            {
+                pi++;
+            }
+            return dp[si][pi] = (pi == p.size());
+        }
 
+        return dp[si][pi] = false;
+    }
+
+    if (dp[si][pi] != -1)
+    {
+        return dp[si][pi];
+    }
+
+    bool res = false;
+    if (s[si] == p[pi])
+    {
+        return dp[si][pi] = isMatch_(s, si + 1, p, pi + 1, dp);
+    }
+    else if (p[pi] == '*')
+    {
+        if (pi + 1 == p.size())
+        {
+            return true;
+        }
+        else if (p[pi + 1] == '?' || p[pi + 1] == '*')
+        {
+            for (int i = si; i < s.size(); i++)
+            {
+                res = res || isMatch_(s, i, p, pi + 1, dp);
+            }
+        }
+        char next = p[pi + 1];
+        for (int i = si; i < s.size(); i++)
+        {
+            if (s[i] == next)
+            {
+                res = res || isMatch_(s, i, p, pi + 1, dp);
+            }
+        }
+    }
+    else if (p[pi] == '?')
+    {
+        res = res || isMatch_(s, si + 1, p, pi + 1, dp);
+    }
+    return dp[si][pi] = res;
+}
+
+bool isMatch(string s, string p)
+{
+    vector<vector<int>> dp(s.size() + 1, vector<int>(p.size() + 1, -1));
+    return isMatch_(s, 0, p, 0, dp);
+}
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
 void solve()
 {
-    // int n = 10;
+    int n = 4;
+    vector<int> dp(n + 1, -1);
+    cout << fibo_btr(n) << endl;
+    display(dp);
     // vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
     // vector<int> dp(n + 1, 0);
     // cout << MP_jumps(0, 0, n - 1, n - 1, dp) << endl;
@@ -1458,8 +1575,8 @@ void solve()
     // cout << dice_randomDP(0, n, ar, dp);
 
     // cout << partition_in_K_subset(3, 2);
-    vector<int> arr = {1, 2, 5, 8, 6, 1, 1, 0, 50, 4, 18};
-    cout << INV_bitonic(arr) << endl;
+    // vector<int> arr = {1, 2, 5, 8, 6, 1, 1, 0, 50, 4, 18};
+    // cout << INV_bitonic(arr) << endl;
 }
 int main()
 {
