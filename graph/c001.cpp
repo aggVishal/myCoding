@@ -1,81 +1,101 @@
-#include<iostream>
-#include<vector>
-#include<queue>
-#include<algorithm>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
 #define ll long long
 
 using namespace std;
 
-class edge{
-    public:
+class edge
+{
+public:
     int u;
-    int w=10;    
-    edge(int u,int w){
-        this->u=u;
-        this->w=w;
+    int w = 10;
+    edge(int u, int w)
+    {
+        this->u = u;
+        this->w = w;
     }
 };
-int N=7;   //no of vertex
-vector<vector<edge>> graph(N,vector<edge>());   //adjacency list type graph
+int N = 7;                                     //no of vertex
+vector<vector<edge>> graph(N, vector<edge>()); //adjacency list type graph
 
-void constructgraphB(int v,int u,int w){         //in bidirection(v->u & u->v)
-    edge e1(u,w);
-    edge e2(v,w);
+void constructgraphB(int v, int u, int w)
+{ //in bidirection(v->u & u->v)
+    edge e1(u, w);
+    edge e2(v, w);
     graph[v].push_back(e1);
     graph[u].push_back(e2);
 }
-void constructgraphU(int v,int u,int w){         //in unidirection(v->u)
-    edge e1(u,w);
+void constructgraphU(int v, int u, int w)
+{ //in unidirection(v->u)
+    edge e1(u, w);
     graph[v].push_back(e1);
 }
 
-void addedge(vector<vector<edge>>& Ngraph,int u,int v,int w){
-    edge e1(u,w);
-    edge e2(v,w);
+void addedge(vector<vector<edge>> &Ngraph, int u, int v, int w)
+{
+    edge e1(u, w);
+    edge e2(v, w);
     Ngraph[v].push_back(e1);
     Ngraph[u].push_back(e2);
 }
 
-void display_(vector<vector<edge>>& ngraph){
-    for(int i=0;i<ngraph.size();i++){
-        cout<<i<<"-> ";
-        for(edge x:ngraph[i]){
-            cout<<"("<<x.u<<","<<x.w<<")"<<" ";
+void display_(vector<vector<edge>> &ngraph)
+{
+    for (int i = 0; i < ngraph.size(); i++)
+    {
+        cout << i << "-> ";
+        for (edge x : ngraph[i])
+        {
+            cout << "(" << x.u << "," << x.w << ")"
+                 << " ";
         }
-        cout<<endl;
+        cout << endl;
     }
 }
 
-void display(){
-    for(int i=0;i<graph.size();i++){
-        cout<<i<<"-> ";
-        for(edge x:graph[i]){
-            cout<<"("<<x.u<<","<<x.w<<")"<<" ";
+void display()
+{
+    for (int i = 0; i < graph.size(); i++)
+    {
+        cout << i << "-> ";
+        for (edge x : graph[i])
+        {
+            cout << "(" << x.u << "," << x.w << ")"
+                 << " ";
         }
-        cout<<endl;
+        cout << endl;
     }
 }
 //BASICS************************************************************************************************************
-int findindex(vector<edge> gp,int v){  //find index of vertex v in graph[u]
-    int i=0;
-    for(i=0;i<gp.size();i++){
-        edge e=gp[i];
-        if(e.u==v){
+int findindex(vector<edge> gp, int v)
+{ //find index of vertex v in graph[u]
+    int i = 0;
+    for (i = 0; i < gp.size(); i++)
+    {
+        edge e = gp[i];
+        if (e.u == v)
+        {
             break;
         }
     }
-    return i;    
+    return i;
 }
 
-void removeedge(int v,int u){
-    int idx1=findindex(graph[u],v);
-    int idx2=findindex(graph[v],u);
-    graph[u].erase(graph[u].begin()+idx1);
-    graph[v].erase(graph[v].begin()+idx2);    
+void removeedge(int v, int u)
+{
+    int idx1 = findindex(graph[u], v);
+    int idx2 = findindex(graph[v], u);
+    graph[u].erase(graph[u].begin() + idx1);
+    graph[v].erase(graph[v].begin() + idx2);
 }
-bool findedge(int v1,int v2){
-    for(edge e:graph[v1]){
-        if(e.u==v2){
+bool findedge(int v1, int v2)
+{
+    for (edge e : graph[v1])
+    {
+        if (e.u == v2)
+        {
             return true;
         }
     }
@@ -93,194 +113,243 @@ bool findedge(int v1,int v2){
 //         removeedge(vtx, e.u);
 //     }
 // }
-void removevertex(int v){
-    while(graph[v].size()!=0){
-        edge e=graph[v][0];
-        removeedge(v,e.u);
+void removevertex(int v)
+{
+    while (graph[v].size() != 0)
+    {
+        edge e = graph[v][0];
+        removeedge(v, e.u);
     }
 }
 
 //QUETIONS********************************************************************************************************
-bool haspath(int s,int d,vector<bool>& vis){
-    if(s==d){
+bool haspath(int s, int d, vector<bool> &vis)
+{
+    if (s == d)
+    {
         //cout<<ans<<endl;
         return true;
     }
-    vis[s]=true;
-    bool res=false;
-    for(edge e:graph[s]){
-        if(!vis[e.u]){
-            res=res||haspath(e.u,d,vis);
+    vis[s] = true;
+    bool res = false;
+    for (edge e : graph[s])
+    {
+        if (!vis[e.u])
+        {
+            res = res || haspath(e.u, d, vis);
         }
     }
     return res;
 }
 
-int allpath(int s,int d,vector<bool>& vis,int w,string ans){
-    if(s==d){
-        cout<<ans<<d<<"->"<<w<<endl;
+int allpath(int s, int d, vector<bool> &vis, int w, string ans)
+{
+    if (s == d)
+    {
+        cout << ans << d << "->" << w << endl;
         return 1;
     }
-    vis[s]=true;
-    int count=0;
-    for(edge e:graph[s]){
-        if(!vis[e.u]){            
-            count+=allpath(e.u,d,vis,w+e.w,ans+to_string(s)+" ");            
+    vis[s] = true;
+    int count = 0;
+    for (edge e : graph[s])
+    {
+        if (!vis[e.u])
+        {
+            count += allpath(e.u, d, vis, w + e.w, ans + to_string(s) + " ");
         }
     }
-    vis[s]=false;
+    vis[s] = false;
     return count;
 }
-void preorder(int s,vector<bool>& vis,int w,string ans){
-    vis[s]=true;
-    cout<<ans<<s<<" @ "<<w<<endl;
-    for(edge e:graph[s]){
-        if(!vis[e.u]){
-            preorder(e.u,vis,w+e.w,ans+to_string(s)+" ");
+void preorder(int s, vector<bool> &vis, int w, string ans)
+{
+    vis[s] = true;
+    cout << ans << s << " @ " << w << endl;
+    for (edge e : graph[s])
+    {
+        if (!vis[e.u])
+        {
+            preorder(e.u, vis, w + e.w, ans + to_string(s) + " ");
         }
     }
-    vis[s]=false;
+    vis[s] = false;
 }
-void postorder(int s,vector<bool>& vis,int w,string ans){
-    vis[s]=true;
-    for(edge e:graph[s]){
-        if(!vis[e.u]){
-            postorder(e.u,vis,w+e.w,ans+to_string(s)+" ");
+void postorder(int s, vector<bool> &vis, int w, string ans)
+{
+    vis[s] = true;
+    for (edge e : graph[s])
+    {
+        if (!vis[e.u])
+        {
+            postorder(e.u, vis, w + e.w, ans + to_string(s) + " ");
         }
     }
-    cout<<ans<<s<<" @ "<<w<<endl;
-    vis[s]=false;
+    cout << ans << s << " @ " << w << endl;
+    vis[s] = false;
 }
 
-class allsolutionpair{
-    public:
-    int lightW=1e7;
-    int heavyW=0;
-    int ceil=1e7;
-    int floor=0;
+class allsolutionpair
+{
+public:
+    int lightW = 1e7;
+    int heavyW = 0;
+    int ceil = 1e7;
+    int floor = 0;
     string lightpath;
     string heavypath;
     string ceilpath;
     string floorpath;
 };
-void allsolution(int s,int d,int w,vector<bool>& vis,string ans,allsolutionpair& pair,int data){
-    if(s==d){
-        if(pair.lightW>w){
-            pair.lightW=w;
-            pair.lightpath=ans+to_string(d);
+void allsolution(int s, int d, int w, vector<bool> &vis, string ans, allsolutionpair &pair, int data)
+{
+    if (s == d)
+    {
+        if (pair.lightW > w)
+        {
+            pair.lightW = w;
+            pair.lightpath = ans + to_string(d);
         }
-        if(pair.heavyW<w){
-            pair.heavyW=w;
-            pair.heavypath=ans+to_string(d);
+        if (pair.heavyW < w)
+        {
+            pair.heavyW = w;
+            pair.heavypath = ans + to_string(d);
         }
-        if(w > data && w < pair.ceil){
-            pair.ceil=w;
-            pair.ceilpath=ans+to_string(d);
+        if (w > data && w < pair.ceil)
+        {
+            pair.ceil = w;
+            pair.ceilpath = ans + to_string(d);
         }
-        if(w < data && w > pair.floor){
-            pair.floor=w;
-            pair.floorpath=ans+to_string(d);
+        if (w < data && w > pair.floor)
+        {
+            pair.floor = w;
+            pair.floorpath = ans + to_string(d);
         }
         return;
     }
-    vis[s]=true;
-    for(edge e:graph[s]){
-        if(!vis[e.u]){
-            allsolution(e.u,d,w+e.w,vis,ans+to_string(s)+" ",pair,data);
+    vis[s] = true;
+    for (edge e : graph[s])
+    {
+        if (!vis[e.u])
+        {
+            allsolution(e.u, d, w + e.w, vis, ans + to_string(s) + " ", pair, data);
         }
     }
-    vis[s]=false;
+    vis[s] = false;
     return;
 }
 
-void ishamiltoniancycle(int s,int osrc,int count,vector<bool>& vis,string ans){
-    if(count==(N-1)){
-        if(findedge(s,osrc)){
-            cout<<"hamiltonian cycle: "<<ans+to_string(s)<<endl;
+void ishamiltoniancycle(int s, int osrc, int count, vector<bool> &vis, string ans)
+{
+    if (count == (N - 1))
+    {
+        if (findedge(s, osrc))
+        {
+            cout << "hamiltonian cycle: " << ans + to_string(s) << endl;
         }
-        else{
-            cout<<"hamiltonian path: "<<ans+to_string(s)<<endl;
+        else
+        {
+            cout << "hamiltonian path: " << ans + to_string(s) << endl;
         }
         return;
     }
-    vis[s]=true;
+    vis[s] = true;
     //bool res=false;
-    for(edge e:graph[s]){
-        if(!vis[e.u]){            
-            ishamiltoniancycle(e.u,osrc,count+1,vis,ans+to_string(s)+" ");            
+    for (edge e : graph[s])
+    {
+        if (!vis[e.u])
+        {
+            ishamiltoniancycle(e.u, osrc, count + 1, vis, ans + to_string(s) + " ");
         }
     }
-    vis[s]=false;
+    vis[s] = false;
     return;
 }
 
-int GCC_(int s,vector<bool>& vis){
-    vis[s]=true;
-    int count=0;
-    for(edge e:graph[s]){
-        if(!vis[e.u]){
-            count+=GCC_(e.u,vis);
+int GCC_(int s, vector<bool> &vis)
+{
+    vis[s] = true;
+    int count = 0;
+    for (edge e : graph[s])
+    {
+        if (!vis[e.u])
+        {
+            count += GCC_(e.u, vis);
         }
     }
-    return count+1;
+    return count + 1;
 }
-int GCC(vector<bool>& vis){
-    int count=0;
-    int maxsize=0;
-    for(int i=0;i<N;i++){
-        if(vis[i]==false){
+int GCC(vector<bool> &vis)
+{
+    int count = 0;
+    int maxsize = 0;
+    for (int i = 0; i < N; i++)
+    {
+        if (vis[i] == false)
+        {
             count++;
-            maxsize=max(maxsize,GCC_(i,vis));
-        }        
+            maxsize = max(maxsize, GCC_(i, vis));
+        }
     }
-    cout<<maxsize<<endl;
+    cout << maxsize << endl;
     return count;
 }
 
-string differIslands_(vector<vector<int>>&board,int r,int c){
-    board[r][c]=2;
-    string L="",R="",D="",U="";
-    if(r-1>=0&&board[r-1][c]==1){
-        U="U";
-        U+= differIslands_(board,r-1,c);
-        U+="B";
+string differIslands_(vector<vector<int>> &board, int r, int c)
+{
+    board[r][c] = 2;
+    string L = "", R = "", D = "", U = "";
+    if (r - 1 >= 0 && board[r - 1][c] == 1)
+    {
+        U = "U";
+        U += differIslands_(board, r - 1, c);
+        U += "B";
     }
-    if(r+1<board.size()&&board[r+1][c]==1){
-        D="D";
-        D+= differIslands_(board,r+1,c);
-        D+="B";
+    if (r + 1 < board.size() && board[r + 1][c] == 1)
+    {
+        D = "D";
+        D += differIslands_(board, r + 1, c);
+        D += "B";
     }
-    if(c-1>=0&&board[r][c-1]==1){
-        L="L";
-        L+= differIslands_(board,r,c-1);
-        L+="B";
+    if (c - 1 >= 0 && board[r][c - 1] == 1)
+    {
+        L = "L";
+        L += differIslands_(board, r, c - 1);
+        L += "B";
     }
-    if(c+1<board[0].size()&&board[r][c+1]==1){
-        R="R";
-        R+= differIslands_(board,r,c+1);
-        R+="B";
+    if (c + 1 < board[0].size() && board[r][c + 1] == 1)
+    {
+        R = "R";
+        R += differIslands_(board, r, c + 1);
+        R += "B";
     }
-    return L+R+U+D;
+    return L + R + U + D;
 }
 
-int differIslands(vector<vector<int>>&board){
+int differIslands(vector<vector<int>> &board)
+{
     string s;
-    int l=1;
+    int l = 1;
     vector<string> strings;
-    for(int i=0;i<board.size();i++){
-        for(int j=0;j<board[0].size();j++){
-            if(board[i][j]==1){
-                s=differIslands_(board,i,j);
-                for(string str:strings){
-                    if(str==s){
-                        l=0;
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[0].size(); j++)
+        {
+            if (board[i][j] == 1)
+            {
+                s = differIslands_(board, i, j);
+                for (string str : strings)
+                {
+                    if (str == s)
+                    {
+                        l = 0;
                     }
                 }
-                if(l==1){
-                    strings.push_back(s);                    
-                }                
+                if (l == 1)
+                {
+                    strings.push_back(s);
+                }
             }
-            l=1;
+            l = 1;
         }
     }
     return strings.size();
@@ -288,157 +357,188 @@ int differIslands(vector<vector<int>>&board){
 
 //BFS*********************************************************************************************************************************
 
-class BFSpair{
-    public:
+class BFSpair
+{
+public:
     int first;
     string second;
-    int level=0;
-    BFSpair(int first,string second){
-        this->first=first;
-        this->second=second;
+    int level = 0;
+    BFSpair(int first, string second)
+    {
+        this->first = first;
+        this->second = second;
     }
-    BFSpair(int first,string second,int lvl){
-        this->first=first;
-        this->second=second;
-        level=lvl;
+    BFSpair(int first, string second, int lvl)
+    {
+        this->first = first;
+        this->second = second;
+        level = lvl;
     }
 };
 
-void BFS_01(int s,vector<bool>&vis){     /// Normal BFS
+void BFS_01(int s, vector<bool> &vis)
+{ /// Normal BFS
     queue<BFSpair> que;
-    que.push({s,to_string(s)});
-    int dest=6;
-    while(que.size()!=0){
-        BFSpair v=que.front();
+    que.push({s, to_string(s)});
+    int dest = 6;
+    while (que.size() != 0)
+    {
+        BFSpair v = que.front();
         que.pop();
-        if(vis[v.first]==true){
-            cout<<"Cycle: "<<v.second<<endl;
+        if (vis[v.first] == true)
+        {
+            cout << "Cycle: " << v.second << endl;
             continue;
         }
-        if(v.first==dest){
-            cout<<"Destination: "<<v.second<<endl;
+        if (v.first == dest)
+        {
+            cout << "Destination: " << v.second << endl;
         }
-        vis[v.first]=true;
-        for(edge e: graph[v.first]){
-            if(!vis[e.u]){
-                que.push({e.u,v.second+to_string(e.u)});
+        vis[v.first] = true;
+        for (edge e : graph[v.first])
+        {
+            if (!vis[e.u])
+            {
+                que.push({e.u, v.second + to_string(e.u)});
             }
         }
     }
 }
 
-
-void BFS_02(int s,vector<bool>&vis){     /// when level is also taken in class BFSpair
+void BFS_02(int s, vector<bool> &vis)
+{ /// when level is also taken in class BFSpair
     queue<BFSpair> que;
-    que.push({s,to_string(s),0});
-    int dest=6;
-    
-    while(que.size()!=0){
-        BFSpair v=que.front();
+    que.push({s, to_string(s), 0});
+    int dest = 6;
+
+    while (que.size() != 0)
+    {
+        BFSpair v = que.front();
         que.pop();
-        if(vis[v.first]==true){
-            cout<<"Cycle: "<<v.second<<" @ "<<v.level<<endl;
+        if (vis[v.first] == true)
+        {
+            cout << "Cycle: " << v.second << " @ " << v.level << endl;
             continue;
         }
-        if(v.first==dest){
-            cout<<"Destination: "<<v.second<<" @ "<<v.level<<endl;
+        if (v.first == dest)
+        {
+            cout << "Destination: " << v.second << " @ " << v.level << endl;
         }
 
-
-        vis[v.first]=true;
-        for(edge e: graph[v.first]){
-            if(!vis[e.u]){
-                que.push({e.u,v.second+to_string(e.u),v.level++});
+        vis[v.first] = true;
+        for (edge e : graph[v.first])
+        {
+            if (!vis[e.u])
+            {
+                que.push({e.u, v.second + to_string(e.u), v.level++});
             }
         }
     }
 }
 
-void BFS_03(int s,vector<bool>&vis){     /// Queue bases on size
+void BFS_03(int s, vector<bool> &vis)
+{ /// Queue bases on size
     queue<BFSpair> que;
-    que.push({s,to_string(s)});
-    int dest=6;
-    int level=0;
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-- >0){        
-            BFSpair v=que.front();
+    que.push({s, to_string(s)});
+    int dest = 6;
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            BFSpair v = que.front();
             que.pop();
 
-            if(vis[v.first]==true){
-                cout<<"Cycle: "<<v.second<<" @ "<<level<<endl;
+            if (vis[v.first] == true)
+            {
+                cout << "Cycle: " << v.second << " @ " << level << endl;
                 continue;
             }
-            if(v.first==dest){
-                cout<<"Destination: "<<v.second<<" @ "<<level<<endl;
+            if (v.first == dest)
+            {
+                cout << "Destination: " << v.second << " @ " << level << endl;
             }
 
-            vis[v.first]=true;
-            for(edge e: graph[v.first]){
-                if(!vis[e.u]){
-                    que.push({e.u,v.second+to_string(e.u)});
+            vis[v.first] = true;
+            for (edge e : graph[v.first])
+            {
+                if (!vis[e.u])
+                {
+                    que.push({e.u, v.second + to_string(e.u)});
                 }
-            }            
+            }
         }
         level++;
     }
 }
 
-void BFS_04(int s,vector<bool>&vis){     /// Queue based on size and can't detect cycles
+void BFS_04(int s, vector<bool> &vis)
+{ /// Queue based on size and can't detect cycles
     queue<BFSpair> que;
-    que.push({s,to_string(s)});
-    int dest=6;
-    int level=0;
-    vis[0]=true;
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-- >0){        
-            BFSpair v=que.front();
+    que.push({s, to_string(s)});
+    int dest = 6;
+    int level = 0;
+    vis[0] = true;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            BFSpair v = que.front();
             que.pop();
 
-            
-            if(v.first==dest){
-                cout<<"Destination: "<<v.second<<" @ "<<level<<endl;
+            if (v.first == dest)
+            {
+                cout << "Destination: " << v.second << " @ " << level << endl;
             }
 
-            
-            for(edge e: graph[v.first]){
-                if(!vis[e.u]){
-                    que.push({e.u,v.second+to_string(e.u)});
-                    vis[e.u]=true;
+            for (edge e : graph[v.first])
+            {
+                if (!vis[e.u])
+                {
+                    que.push({e.u, v.second + to_string(e.u)});
+                    vis[e.u] = true;
                 }
-            }            
+            }
         }
         level++;
     }
 }
 
 // leetcode 1091
-int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
-    int n=grid.size();
-    int m=grid[0].size();
-    if(grid[0][0]==1||grid[n-1][m-1]==1) return -1;
-    vector<vector<int>> dir={{1,1},{1,0},{0,1},{-1,1},{1,-1},{0,-1},{-1,0},{-1,-1}};
+int shortestPathBinaryMatrix(vector<vector<int>> &grid)
+{
+    int n = grid.size();
+    int m = grid[0].size();
+    if (grid[0][0] == 1 || grid[n - 1][m - 1] == 1)
+        return -1;
+    vector<vector<int>> dir = {{1, 1}, {1, 0}, {0, 1}, {-1, 1}, {1, -1}, {0, -1}, {-1, 0}, {-1, -1}};
     queue<int> que;
     que.push(0);
-    int level=1;
-    grid[0][0]=1;
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-->0){
-            int idx=que.front();
+    int level = 1;
+    grid[0][0] = 1;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int idx = que.front();
             que.pop();
-            int r=idx/m;
-            int c=idx%m;
-            if(r==n-1&&c==m-1) return level;
-            for(int d=0;d<8;d++){
-                int x=r+dir[d][0];
-                int y=c+dir[d][1];
-                if(x>=0&&y>=0&&x<n&&y<m&&grid[x][y]==0){
-                    que.push(x*m+y);
-                    grid[x][y]=1;
-                }   
-            }        
+            int r = idx / m;
+            int c = idx % m;
+            if (r == n - 1 && c == m - 1)
+                return level;
+            for (int d = 0; d < 8; d++)
+            {
+                int x = r + dir[d][0];
+                int y = c + dir[d][1];
+                if (x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == 0)
+                {
+                    que.push(x * m + y);
+                    grid[x][y] = 1;
+                }
+            }
         }
         level++;
     }
@@ -446,251 +546,317 @@ int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
 }
 
 //leetcode 286 (walls and gates)  or lintcode 663
-void wallsAndGates(vector<vector<int>> &rooms) {
-    int n=rooms.size();
-    int m=rooms[0].size();
-    vector<vector<int>> dir={{1,0},{0,1},{0,-1},{-1,0}};
+void wallsAndGates(vector<vector<int>> &rooms)
+{
+    int n = rooms.size();
+    int m = rooms[0].size();
+    vector<vector<int>> dir = {{1, 0}, {0, 1}, {0, -1}, {-1, 0}};
     queue<int> que;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
-            if(rooms[i][j]==0){
-                que.push(i*m+j);    
-            }
-        }
-    }      
-    int level=0;
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-->0){
-            int idx=que.front();
-            que.pop();
-            int r=idx/m;
-            int c=idx%m;
-            for(int d=0;d<4;d++){
-                int x=r+dir[d][0];
-                int y=c+dir[d][1];
-                if(x>=0&&y>=0&&x<n&&y<m&&rooms[x][y]==2147483647){
-                    que.push(x*m+y);
-                    rooms[x][y]=level;
-                }   
-            }  
-
-        }
-        level++;
-    }  
-    return;
-}
-
-//leetcode 994 (amazon's favorite)
-int orangesRotting(vector<vector<int>>& grid) {
-    int n=grid.size();
-    int m=grid[0].size();
-    queue<int> que;
-    int count=0;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
-            if(grid[i][j]==1){
-            count++;
-            }
-            if(grid[i][j]==2){
-                que.push(i*m+j);
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (rooms[i][j] == 0)
+            {
+                que.push(i * m + j);
             }
         }
     }
-    if(count==0) return 0;
-    vector<vector<int>> dir={{0,1},{1,0},{-1,0},{0,-1}};
-    int level=0;
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-->0){
-            int idx=que.front();
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int idx = que.front();
             que.pop();
-            int r=idx/m;
-            int c=idx%m;
-            for(int d=0;d<4;d++){
-                int x=r+dir[d][0];
-                int y=c+dir[d][1];
-                if(x>=0&&y>=0&&x<n&&y<m&&grid[x][y]==1){
-                    que.push(x*m+y);
-                    grid[x][y]=2;
+            int r = idx / m;
+            int c = idx % m;
+            for (int d = 0; d < 4; d++)
+            {
+                int x = r + dir[d][0];
+                int y = c + dir[d][1];
+                if (x >= 0 && y >= 0 && x < n && y < m && rooms[x][y] == 2147483647)
+                {
+                    que.push(x * m + y);
+                    rooms[x][y] = level;
                 }
             }
         }
         level++;
     }
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
-            if(grid[i][j]==1){
-                return -1;
-            }                
+    return;
+}
+
+//leetcode 994 (amazon's favorite)
+int orangesRotting(vector<vector<int>> &grid)
+{
+    int n = grid.size();
+    int m = grid[0].size();
+    queue<int> que;
+    int count = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (grid[i][j] == 1)
+            {
+                count++;
+            }
+            if (grid[i][j] == 2)
+            {
+                que.push(i * m + j);
+            }
         }
-    }        
-    return level-1;      
+    }
+    if (count == 0)
+        return 0;
+    vector<vector<int>> dir = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int idx = que.front();
+            que.pop();
+            int r = idx / m;
+            int c = idx % m;
+            for (int d = 0; d < 4; d++)
+            {
+                int x = r + dir[d][0];
+                int y = c + dir[d][1];
+                if (x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == 1)
+                {
+                    que.push(x * m + y);
+                    grid[x][y] = 2;
+                }
+            }
+        }
+        level++;
+    }
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (grid[i][j] == 1)
+            {
+                return -1;
+            }
+        }
+    }
+    return level - 1;
 }
 
 //Is Barpatite or leetcode 785
 
-bool isbarpatite_(int s,vector<int>& vis){
-    pair<int,int> p(s,0);
-    queue<pair<int,int>> que;
+bool isbarpatite_(int s, vector<int> &vis)
+{
+    pair<int, int> p(s, 0);
+    queue<pair<int, int>> que;
     que.push(p);
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-->0){
-            pair<int,int> idx=que.front();
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            pair<int, int> idx = que.front();
             que.pop();
-            if(vis[idx.first]!=-1){
-                if(vis[idx.first]!=idx.second){
+            if (vis[idx.first] != -1)
+            {
+                if (vis[idx.first] != idx.second)
+                {
                     return false;
-                }   
-                else continue;                            
+                }
+                else
+                    continue;
             }
-            vis[idx.first]=idx.second;
-            for(edge e:graph[idx.first]){
-                if(vis[e.u]==-1){
-                    que.push({e.u,(idx.second+1)%2});
+            vis[idx.first] = idx.second;
+            for (edge e : graph[idx.first])
+            {
+                if (vis[e.u] == -1)
+                {
+                    que.push({e.u, (idx.second + 1) % 2});
                 }
             }
         }
     }
     return true;
 }
-bool isBipartite() {
-    vector<int>vis(graph.size(),-1);        
-    for(int i=0;i<graph.size();i++){
-        if(vis[i]==-1){
-            if(!isbarpatite_(i,vis)){
+bool isBipartite()
+{
+    vector<int> vis(graph.size(), -1);
+    for (int i = 0; i < graph.size(); i++)
+    {
+        if (vis[i] == -1)
+        {
+            if (!isbarpatite_(i, vis))
+            {
                 return false;
             }
         }
     }
-    return true;;        
+    return true;
+    ;
 }
 
 // Topological Sort***************************************************************************************************
-void topoDFS_(vector<vector<edge>>& ngraph,int s,vector<bool>& vis,vector<int>& ans){
-    vis[s]=true;
-    for(edge e:ngraph[s]){
-        if(!vis[e.u]){
-            topoDFS_(ngraph,e.u,vis,ans);
-        }        
+void topoDFS_(vector<vector<edge>> &ngraph, int s, vector<bool> &vis, vector<int> &ans)
+{
+    vis[s] = true;
+    for (edge e : ngraph[s])
+    {
+        if (!vis[e.u])
+        {
+            topoDFS_(ngraph, e.u, vis, ans);
+        }
     }
     ans.push_back(s);
 }
 
-void topoDFS(){              //can't detect cycle
-    vector<bool>vis(N,false);
+void topoDFS()
+{ //can't detect cycle
+    vector<bool> vis(N, false);
     vector<int> ans;
-    for(int i=0;i<N;i++){
-        if(!vis[i]){
-            topoDFS_(graph,i,vis,ans);
-        }        
+    for (int i = 0; i < N; i++)
+    {
+        if (!vis[i])
+        {
+            topoDFS_(graph, i, vis, ans);
+        }
     }
-    for(int i=ans.size()-1;i>=0;i--){
-        cout<<ans[i]<<" ";
+    for (int i = ans.size() - 1; i >= 0; i--)
+    {
+        cout << ans[i] << " ";
     }
 }
 
 //topology sort by BFS (kahn's algorithm)**************************************************************************
 
-void kahnsAlgo(){
-    vector<int>ans;
-    vector<int> ind(N,0);
-    for(int i=0;i<graph.size();i++){
-        for(edge e: graph[i]){
+void kahnsAlgo()
+{
+    vector<int> ans;
+    vector<int> ind(N, 0);
+    for (int i = 0; i < graph.size(); i++)
+    {
+        for (edge e : graph[i])
+        {
             ind[e.u]++;
         }
     }
     queue<int> que;
-    for(int i=0;i<graph.size();i++){
-        if(ind[i]==0){
+    for (int i = 0; i < graph.size(); i++)
+    {
+        if (ind[i] == 0)
+        {
             que.push(i);
-        }        
+        }
     }
-    while(que.size()!=0){
-        int size=que.size();
-        while(size-->0){
-            int idx=que.front();  que.pop();
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int idx = que.front();
+            que.pop();
             ans.push_back(idx);
-            for(edge e: graph[idx]){
-                if(--ind[e.u]==0){
+            for (edge e : graph[idx])
+            {
+                if (--ind[e.u] == 0)
+                {
                     que.push(e.u);
                 }
             }
         }
     }
-    if(ans.size()==N){
-        cout<<"Non cycle: ";
-        for(int i=0;i<ans.size();i++){
-            cout<<ans[i]<<" ";
+    if (ans.size() == N)
+    {
+        cout << "Non cycle: ";
+        for (int i = 0; i < ans.size(); i++)
+        {
+            cout << ans[i] << " ";
         }
     }
-    else cout<<"Cycle...";    
+    else
+        cout << "Cycle...";
 }
 
 //leetcode 207
 //leetcode 210
 
 //Cycle detection using DFS****************************************************************************************
-bool cycledetectDFS_(int s,vector<int>& vis){
-    if(vis[s]==1) return true;
-    if(vis[s]==2) return false;
-    
-    vis[s]=1;
-    bool res=false;
-    for(edge e: graph[s]){
-        res=res||cycledetectDFS_(e.u,vis);
+bool cycledetectDFS_(int s, vector<int> &vis)
+{
+    if (vis[s] == 1)
+        return true;
+    if (vis[s] == 2)
+        return false;
+
+    vis[s] = 1;
+    bool res = false;
+    for (edge e : graph[s])
+    {
+        res = res || cycledetectDFS_(e.u, vis);
     }
-    vis[s]=2;
-    return res;    
+    vis[s] = 2;
+    return res;
 }
 
-void cycledetectDFS(){
-    vector<int> vis(N,0);
-    bool res=false;
-    for(int i=0;i<graph.size()&&!res;i++){
-        if(vis[i]==0){
-            res=res||cycledetectDFS_(i,vis);
+void cycledetectDFS()
+{
+    vector<int> vis(N, 0);
+    bool res = false;
+    for (int i = 0; i < graph.size() && !res; i++)
+    {
+        if (vis[i] == 0)
+        {
+            res = res || cycledetectDFS_(i, vis);
         }
     }
-    cout<<res<<endl;
+    cout << res << endl;
 }
-
 
 //SCC*****************************************************************************************************************
 
-
 //Kosaraju Algorithm
 
-int kosarajualgo(){    //counts number of SCC in a  graph(element not in cycle counts as a SCC)
-    vector<bool> vis(N,false);
+int kosarajualgo()
+{ //counts number of SCC in a  graph(element not in cycle counts as a SCC)
+    vector<bool> vis(N, false);
     vector<int> ans;
-    for(int i=0;i<N;i++){
-        if(!vis[i]){
-            topoDFS_(graph,i,vis,ans);
+    for (int i = 0; i < N; i++)
+    {
+        if (!vis[i])
+        {
+            topoDFS_(graph, i, vis, ans);
         }
     }
-    cout<<ans.size()<<endl;
-    for(int i=0;i<ans.size();i++){
-        cout<<ans[i]<<" ";
+    cout << ans.size() << endl;
+    for (int i = 0; i < ans.size(); i++)
+    {
+        cout << ans[i] << " ";
     }
-    cout<<endl;
-    vector<vector<edge>>ngraph(N,vector<edge>());
-    for(int i=0;i<N;i++){
-        for(edge e: graph[i]){
-            edge x(i,10);
+    cout << endl;
+    vector<vector<edge>> ngraph(N, vector<edge>());
+    for (int i = 0; i < N; i++)
+    {
+        for (edge e : graph[i])
+        {
+            edge x(i, 10);
             //x.u=i;
             ngraph[e.u].push_back(x);
         }
     }
     //display_(ngraph);
-    vector<bool> vis2(N,false);
-    int count=0;
+    vector<bool> vis2(N, false);
+    int count = 0;
     vector<int> x;
-    for(int i=ans.size()-1;i>=0;i--){
-        if(!vis2[ans[i]]){
+    for (int i = ans.size() - 1; i >= 0; i--)
+    {
+        if (!vis2[ans[i]])
+        {
             count++;
-            topoDFS_(ngraph,ans[i],vis2,x);
+            topoDFS_(ngraph, ans[i], vis2, x);
         }
     }
     return count;
@@ -699,41 +865,50 @@ int kosarajualgo(){    //counts number of SCC in a  graph(element not in cycle c
 //Union Find*************************************************************************************************************
 //***********************************************************************************************************************
 
-
 vector<int> par;
 vector<int> setsize;
-int findpar(int idx){
-    if(par[idx]==idx)return idx;
-    return par[idx]=findpar(par[idx]);
+int findpar(int idx)
+{
+    if (par[idx] == idx)
+        return idx;
+    return par[idx] = findpar(par[idx]);
 }
-void mergeset(int p1,int p2){
-    if(setsize[p1]>setsize[p2]){
-        par[p2]=p1;
-        setsize[p1]+=setsize[p2];
+void mergeset(int p1, int p2)
+{
+    if (setsize[p1] > setsize[p2])
+    {
+        par[p2] = p1;
+        setsize[p1] += setsize[p2];
     }
-    else{
-        par[p1]=p2;
-        setsize[p2]+=setsize[p1];
+    else
+    {
+        par[p1] = p2;
+        setsize[p2] += setsize[p1];
     }
 }
-
 
 //union find function to detect cycle in a graph
-bool Union_find_detect_cycle(){
+bool Union_find_detect_cycle()
+{
     par.resize(N);
     setsize.resize(N);
-    for(int i=0;i<N;i++){
-        par[i]=i;
-        setsize[i]=1;
+    for (int i = 0; i < N; i++)
+    {
+        par[i] = i;
+        setsize[i] = 1;
     }
-    for(int i=0;i<graph.size();i++){
-        for(edge e:graph[i]){
-            int p1=findpar(i);
-            int p2=findpar(e.u);
-            if(p1==p2){
+    for (int i = 0; i < graph.size(); i++)
+    {
+        for (edge e : graph[i])
+        {
+            int p1 = findpar(i);
+            int p2 = findpar(e.u);
+            if (p1 == p2)
+            {
                 return true;
             }
-            else mergeset(p1,p2);
+            else
+                mergeset(p1, p2);
         }
     }
     return false;
@@ -741,50 +916,60 @@ bool Union_find_detect_cycle(){
 
 //leetcode 584
 
-    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
-        int n=edges.size();
-        par.resize(n+1);
-        setsize.resize(n+1);
-        for(int i=1;i<=n;i++){
-            par[i]=i;
-            setsize[i]=1;
-        }
-        int a,b;
-        for(int i=0;i<n;i++){
-            int l1=findpar(edges[i][0]);
-            int l2=findpar(edges[i][1]);
-            if(l1==l2){
-                a=edges[i][0];
-                b=edges[i][1];
-                break;
-            }
-            mergeset(l1,l2);            
-        }     
-        return {min(a,b),max(a,b)};
+vector<int> findRedundantConnection(vector<vector<int>> &edges)
+{
+    int n = edges.size();
+    par.resize(n + 1);
+    setsize.resize(n + 1);
+    for (int i = 1; i <= n; i++)
+    {
+        par[i] = i;
+        setsize[i] = 1;
     }
+    int a, b;
+    for (int i = 0; i < n; i++)
+    {
+        int l1 = findpar(edges[i][0]);
+        int l2 = findpar(edges[i][1]);
+        if (l1 == l2)
+        {
+            a = edges[i][0];
+            b = edges[i][1];
+            break;
+        }
+        mergeset(l1, l2);
+    }
+    return {min(a, b), max(a, b)};
+}
 
 //leetcode 547
-int findCircleNum(vector<vector<int>>& M) {
-        int n=M.size();
-        par.resize(n);
-        for(int i=0;i<n;i++){
-            par[i]=i;
-        }        
-        int count=n;
-        for(int i=0;i<n;i++){
-            for(int j=i+1;j<n;j++){
-                if(M[i][j]==1){
-                    int l1=findpar(i);
-                    int l2=findpar(j);
-                    if(l1!=l2){   
-                        par[l1]=l2;
-                        count--;
-                    }
+int findCircleNum(vector<vector<int>> &M)
+{
+    int n = M.size();
+    par.resize(n);
+    for (int i = 0; i < n; i++)
+    {
+        par[i] = i;
+    }
+    int count = n;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (M[i][j] == 1)
+            {
+                int l1 = findpar(i);
+                int l2 = findpar(j);
+                if (l1 != l2)
+                {
+                    par[l1] = l2;
+                    count--;
                 }
             }
-        }        
-        return count;
+        }
     }
+    return count;
+}
 
 //leetcode 1061
 /*
@@ -837,22 +1022,27 @@ Space: O(m).
 
 //solution leetcode 1061
 
-string leetcode_1061(string A,string B,string S){
+string leetcode_1061(string A, string B, string S)
+{
     vector<int> par(26);
-    for(int i=0;i<26;i++){
-        par[i]=i;
+    for (int i = 0; i < 26; i++)
+    {
+        par[i] = i;
     }
-    for(int i=0;i<A.length();i++){
-        int p1=findpar(A[i]-'a');
-        int p2=findpar(B[i]-'a');
-        if(p1!=p2){
-            par[p2]=min(p1,p2);
-            par[p1]=min(p1,p2);            
+    for (int i = 0; i < A.length(); i++)
+    {
+        int p1 = findpar(A[i] - 'a');
+        int p2 = findpar(B[i] - 'a');
+        if (p1 != p2)
+        {
+            par[p2] = min(p1, p2);
+            par[p1] = min(p1, p2);
         }
     }
-    string ans="";
-    for(int i=0;i<S.length();i++){
-        ans+=(char)(findpar(S[i]-'a')+'a');
+    string ans = "";
+    for (int i = 0; i < S.length(); i++)
+    {
+        ans += (char)(findpar(S[i] - 'a') + 'a');
     }
     return ans;
 }
@@ -863,7 +1053,8 @@ int numIslands2(vector<vector<char>> &grid)
 {
     int n = grid.size();
     int m = grid[0].size();
-    if(n==0||m==0) return 0;
+    if (n == 0 || m == 0)
+        return 0;
     int noOfOnces = 0;
     for (int i = 0; i < n; i++)
         for (int j = 0; j < m; j++)
@@ -947,23 +1138,27 @@ int numSimilarGroups(vector<string> &A)
 
 //Kruskal's Algorithm (finding MST)
 
-int kruskal_algo(vector<vector<int>>& arr){
-    for(int i=0;i<N;i++){
+int kruskal_algo(vector<vector<int>> &arr)
+{
+    for (int i = 0; i < N; i++)
+    {
         par.push_back(i);
     }
     vector<vector<edge>> kruskal_graph;
-    sort(arr.begin(),arr.end(),[](vector<int>& a, vector<int>& b){
-        return a[2]<b[2];
+    sort(arr.begin(), arr.end(), [](vector<int> &a, vector<int> &b) {
+        return a[2] < b[2];
     });
-    
-    int MST=0;
-    for(int i=0;i<arr.size();i++){
-        int p1=findpar(arr[i][0]);
-        int p2=findpar(arr[i][1]);
-        if(p1!=p2){
-            par[p1]=p2;
-            MST+=arr[i][2];
-            addedge(kruskal_graph,arr[i][0],arr[i][1],arr[i][2]);
+
+    int MST = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        int p1 = findpar(arr[i][0]);
+        int p2 = findpar(arr[i][1]);
+        if (p1 != p2)
+        {
+            par[p1] = p2;
+            MST += arr[i][2];
+            addedge(kruskal_graph, arr[i][0], arr[i][1], arr[i][2]);
         }
     }
     display_(kruskal_graph);
@@ -1001,72 +1196,84 @@ pipes[i][0] != pipes[i][1]
 
 // leetcode 1168 solution
 
-int leetcode_1168(int n,vector<int>& wells, vector<vector<int>>& pipes){
-    for(int i=0;i<n;i++){
-        pipes.push_back({0,i+1,wells[i]});
+int leetcode_1168(int n, vector<int> &wells, vector<vector<int>> &pipes)
+{
+    for (int i = 0; i < n; i++)
+    {
+        pipes.push_back({0, i + 1, wells[i]});
         par.push_back(i);
     }
     par.push_back(wells.size());
-    sort(pipes.begin(),pipes.end(),[](vector<int>& a,vector<int>& b)
-    {
-        return a[2]<b[2];
+    sort(pipes.begin(), pipes.end(), [](vector<int> &a, vector<int> &b) {
+        return a[2] < b[2];
     });
-    int cost=0;
-    for(vector<int>& p:pipes){
-        int p1=findpar(p[0]);
-        int p2=findpar(p[1]);
-        if(p1!=p2){
-            cost+=p[2];
-            par[p1]=p2;
+    int cost = 0;
+    for (vector<int> &p : pipes)
+    {
+        int p1 = findpar(p[0]);
+        int p2 = findpar(p[1]);
+        if (p1 != p2)
+        {
+            cost += p[2];
+            par[p1] = p2;
         }
     }
-    
+
     return cost;
 }
 
 //Hacker earth: https://www.hackerearth.com/practice/algorithms/graphs/minimum-spanning-tree/practice-problems/algorithm/mr-president/
-int mr_president(){
-	ll N,M,k;
-	cin>>N>>M>>k;
-	vector<vector<int>> graph;
-	while(M--){
-		int u,v,w;
-		cin>>u>>v>>w;
-		graph.push_back({u,v,w});
-	}
-	
-	for(int i=0;i<=N;i++){
-		par.push_back(i);
-	}
-	sort(graph.begin(),graph.end(),[](vector<int>& a,vector<int>& b){
-		return a[2]<b[2];
-	});
-	vector<vector<int>> newgraph;
-	ll MST=0;
-	for(int i=0;i<graph.size();i++){
-		int p1=findpar(graph[i][0]);
-		int p2=findpar(graph[i][1]);
-		if(p1!=p2){
-			par[p1]=p2;
-			MST+=graph[i][2];
-			newgraph.push_back(graph[i]);
-		}
-	}
-	int no=0;
-	for(int i=1;i<=N;i++){
-		if(par[i]==i&&++no>1) return -1;
-	}
-	int n=0;
-	for(int i=newgraph.size()-1;i>=0;i--){
-		if(MST<=k){
-			break;
-		}
-		MST=MST-newgraph[i][2]+1;
-		n++;
-	}
-	return MST<=k? n:-1;
+int mr_president()
+{
+    ll N, M, k;
+    cin >> N >> M >> k;
+    vector<vector<int>> graph;
+    while (M--)
+    {
+        int u, v, w;
+        cin >> u >> v >> w;
+        graph.push_back({u, v, w});
+    }
 
-	return n;
+    for (int i = 0; i <= N; i++)
+    {
+        par.push_back(i);
+    }
+    sort(graph.begin(), graph.end(), [](vector<int> &a, vector<int> &b) {
+        return a[2] < b[2];
+    });
+    vector<vector<int>> newgraph;
+    ll MST = 0;
+    for (int i = 0; i < graph.size(); i++)
+    {
+        int p1 = findpar(graph[i][0]);
+        int p2 = findpar(graph[i][1]);
+        if (p1 != p2)
+        {
+            par[p1] = p2;
+            MST += graph[i][2];
+            newgraph.push_back(graph[i]);
+        }
+    }
+    int no = 0;
+    for (int i = 1; i <= N; i++)
+    {
+        if (par[i] == i && ++no > 1)
+            return -1;
+    }
+    int n = 0;
+    for (int i = newgraph.size() - 1; i >= 0; i--)
+    {
+        if (MST <= k)
+        {
+            break;
+        }
+        MST = MST - newgraph[i][2] + 1;
+        n++;
+    }
+    return MST <= k ? n : -1;
+
+    return n;
 }
 auto SpeedUp = []() {
     std::ios::sync_with_stdio(false);
@@ -1075,233 +1282,273 @@ auto SpeedUp = []() {
     return 0;
 }();
 
-
 //Hackerrank: https://www.hackerrank.com/challenges/journey-to-the-moon/problem
-
-
 
 // leetcode 924 -> question link: https://leetcode.com/problems/minimize-malware-spread/discuss/614031/C++-:-Union-Find-(pepcoding.com)-reframe-the-question-on-"CORONA"-with-relatable-explanation
 
-
-
-
 //dijistra's Algorithm
 
-class pair_{
-    public:
+class pair_
+{
+public:
     int src;
     int par;
     int w;
     int wsf;
-    pair_(int src,int par,int w,int wsf){
-        this->src=src;
-        this->par=par;
-        this->w=w;
-        this->wsf=wsf;
+    pair_(int src, int par, int w, int wsf)
+    {
+        this->src = src;
+        this->par = par;
+        this->w = w;
+        this->wsf = wsf;
     }
 };
 
-struct dijistrcomp{
-    public:
-    bool operator()(pair_ const& a ,pair_ const& b){
+struct dijistrcomp
+{
+public:
+    bool operator()(pair_ const &a, pair_ const &b)
+    {
         return a.wsf > b.wsf;
     }
 };
 
-void dijistra_algo(int src){
+void dijistra_algo(int src)
+{
     vector<vector<edge>> dijistra_graph(graph.size());
     priority_queue<pair_, vector<pair_>, dijistrcomp> pq;
-    vector<bool> vis(N,false);
-    pq.push({src,-1,0,0});
-    while(pq.size()!=0){
-        int size=pq.size();
-        while(size-- > 0){
-            pair_ idx=pq.top();pq.pop();
-            if(vis[idx.src]){
+    vector<bool> vis(N, false);
+    pq.push({src, -1, 0, 0});
+    while (pq.size() != 0)
+    {
+        int size = pq.size();
+        while (size-- > 0)
+        {
+            pair_ idx = pq.top();
+            pq.pop();
+            if (vis[idx.src])
+            {
                 continue;
             }
-            if(idx.par != -1){
-                addedge(dijistra_graph,idx.par,idx.src,idx.w);
+            if (idx.par != -1)
+            {
+                addedge(dijistra_graph, idx.par, idx.src, idx.w);
             }
 
-            vis[idx.src]=true;
-            for(edge e: graph[idx.src]){
-                if(!vis[e.u]){
+            vis[idx.src] = true;
+            for (edge e : graph[idx.src])
+            {
+                if (!vis[e.u])
+                {
                     pair_ p1(e.u, idx.src, e.w, idx.wsf + e.w);
                     pq.push(p1);
                 }
             }
         }
-    } 
+    }
     display_(dijistra_graph);
 }
 
 //prims Algo
 
-struct primscomp{
-    public:
-    bool operator()(pair_&a ,pair_&b){
+struct primscomp
+{
+public:
+    bool operator()(pair_ &a, pair_ &b)
+    {
         return a.w > b.w;
     }
 };
 
-void prims_algo(int src){
+void prims_algo(int src)
+{
     vector<vector<edge>> prims_graph(graph.size());
-    priority_queue<pair_,vector<pair_>,primscomp> pq;
-    vector<bool> vis(N,false);
-    pq.push({src,-1,0,0});
-    while(pq.size()!=0){
-        int size=pq.size();
-        while(size-->0){
-            pair_ idx=pq.top();
+    priority_queue<pair_, vector<pair_>, primscomp> pq;
+    vector<bool> vis(N, false);
+    pq.push({src, -1, 0, 0});
+    while (pq.size() != 0)
+    {
+        int size = pq.size();
+        while (size-- > 0)
+        {
+            pair_ idx = pq.top();
             pq.pop();
-            if(vis[idx.src]){
+            if (vis[idx.src])
+            {
                 continue;
             }
-            if(idx.par!=-1){
-                addedge(prims_graph,idx.par,idx.src,idx.w);
+            if (idx.par != -1)
+            {
+                addedge(prims_graph, idx.par, idx.src, idx.w);
             }
 
-            vis[idx.src]=true;
-            for(edge e:graph[idx.src]){
-                if(!vis[e.u]){
-                    pair_ p1(e.u,idx.src,e.w,idx.wsf+e.w);
+            vis[idx.src] = true;
+            for (edge e : graph[idx.src])
+            {
+                if (!vis[e.u])
+                {
+                    pair_ p1(e.u, idx.src, e.w, idx.wsf + e.w);
                     pq.push(p1);
                 }
             }
         }
-    } 
+    }
     display_(prims_graph);
 }
 
 //leetcode 743
-int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        vector<vector<pair<int,int>>> graph(n+1);
-        for(vector<int> e: times){
-            graph[e[0]].push_back({e[1],e[2]});       
-        }
-        vector<int> dis(n+1,-1);
-        priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>> > pq;
-        pq.push({0,k});
-        
-        while(pq.size()!=0){
-            int size=pq.size();
-            while(size-- > 0){
-                pair<int,int> idx=pq.top();
-                pq.pop();
-                
-                if(dis[idx.second]!=-1){
-                    continue;   //cycle
+int networkDelayTime(vector<vector<int>> &times, int n, int k)
+{
+    vector<vector<pair<int, int>>> graph(n + 1);
+    for (vector<int> e : times)
+    {
+        graph[e[0]].push_back({e[1], e[2]});
+    }
+    vector<int> dis(n + 1, -1);
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, k});
+
+    while (pq.size() != 0)
+    {
+        int size = pq.size();
+        while (size-- > 0)
+        {
+            pair<int, int> idx = pq.top();
+            pq.pop();
+
+            if (dis[idx.second] != -1)
+            {
+                continue; //cycle
+            }
+            dis[idx.second] = idx.first;
+            for (pair<int, int> p : graph[idx.second])
+            {
+                if (dis[p.first] == -1)
+                {
+                    pq.push({p.second + idx.first, p.first});
                 }
-                dis[idx.second]=idx.first;
-                for(pair<int,int> p: graph[idx.second]){
-                    if(dis[p.first]==-1){
-                        pq.push({p.second+idx.first,p.first});
-                    }
-                }
-                
             }
         }
-        int maxtime=0;
-        for(int i=1;i<=n;i++){
-            if(dis[i]==-1){
-                return -1;
-            }
-            maxtime=max(maxtime,dis[i]);
+    }
+    int maxtime = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        if (dis[i] == -1)
+        {
+            return -1;
         }
-        return maxtime;
+        maxtime = max(maxtime, dis[i]);
+    }
+    return maxtime;
 }
 
 //leetcode 787
-int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
-        vector<vector<pair<int,int>>> graph(n);
-        for(vector<int> e:flights){
-            graph[e[0]].push_back({e[1],e[2]});
-        }
-        
-        vector<int> dis(n,-1);
-        priority_queue<vector<int>,vector<vector<int>>,greater<vector<int>> > pq;
-        pq.push({0,src,k+1});
-        while(pq.size()!=0){
-            int size=pq.size();
-            while(size--){
-                vector<int> idx=pq.top();
-                pq.pop();
-                
-                if(idx[1]==dst) return idx[0];             // it will find the cost         
-                if(idx[2]==0)  continue;                   // it will check for no of stops
-                
-                dis[idx[1]]=idx[0];
-                for(pair<int,int> e:graph[idx[1]]){
-                    if(dis[e.first]==-1){
-                        pq.push({e.second+idx[0],e.first,idx[2]-1});
-                    }
+int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst, int k)
+{
+    vector<vector<pair<int, int>>> graph(n);
+    for (vector<int> e : flights)
+    {
+        graph[e[0]].push_back({e[1], e[2]});
+    }
+
+    vector<int> dis(n, -1);
+    priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+    pq.push({0, src, k + 1});
+    while (pq.size() != 0)
+    {
+        int size = pq.size();
+        while (size--)
+        {
+            vector<int> idx = pq.top();
+            pq.pop();
+
+            if (idx[1] == dst)
+                return idx[0]; // it will find the cost
+            if (idx[2] == 0)
+                continue; // it will check for no of stops
+
+            dis[idx[1]] = idx[0];
+            for (pair<int, int> e : graph[idx[1]])
+            {
+                if (dis[e.first] == -1)
+                {
+                    pq.push({e.second + idx[0], e.first, idx[2] - 1});
                 }
             }
         }
-        return -1;       
+    }
+    return -1;
 }
 
 //Bellman Ford Algorithm
 
-
 //Finding Articulation Points
-vector<int> dis(N,0);
-vector<int> low(N,0);
-vector<bool> vis_(N,false);
-vector<int> AP(N,0);
-int time=0;
-int rootcalls=0;
-void DFS_AP(int src,int par){
-    dis[src]=low[src]=time++;
-    vis_[src]=true;
-    for(edge e:graph[src]){
-        int child=e.u;
-        if(!vis_[child]){
-            if(par==-1){
+vector<int> dis(N, 0);
+vector<int> low(N, 0);
+vector<bool> vis_(N, false);
+vector<int> AP(N, 0);
+int time = 0;
+int rootcalls = 0;
+void DFS_AP(int src, int par)
+{
+    dis[src] = low[src] = time++;
+    vis_[src] = true;
+    for (edge e : graph[src])
+    {
+        int child = e.u;
+        if (!vis_[child])
+        {
+            if (par == -1)
+            {
                 rootcalls++;
             }
-            DFS_AP(child,src);
-            if(dis[src]<=low[child]){
+            DFS_AP(child, src);
+            if (dis[src] <= low[child])
+            {
                 AP[src]++;
             }
-            low[src]=min(low[src],low[child]);
+            low[src] = min(low[src], low[child]);
         }
-        else if(child!=par){
-            low[src]=min(low[src],dis[child]);
+        else if (child != par)
+        {
+            low[src] = min(low[src], dis[child]);
         }
     }
 }
 
-void print_AP(){
-    int src=0;
-    DFS_AP(src,-1);
-    if(rootcalls==1){
+void print_AP()
+{
+    int src = 0;
+    DFS_AP(src, -1);
+    if (rootcalls == 1)
+    {
         AP[src]--;
     }
-    for(int i=0;i<N;i++){
-        if(AP[i]!=0){
-            cout<<i<<" @ "<<AP[i]<<endl;
+    for (int i = 0; i < N; i++)
+    {
+        if (AP[i] != 0)
+        {
+            cout << i << " @ " << AP[i] << endl;
         }
     }
 }
 
-
 //*********************************************************************************************************************
-void solve(){
-    vector<bool> vis(N,false);
+void solve()
+{
+    vector<bool> vis(N, false);
     // vector<vector<char>> board={};
     // constructgraphU(0,1,10);
     // constructgraphU(1,2,10);
     // constructgraphU(2,3,10);
-    constructgraphB(0,1,20);
-    constructgraphB(0,3,20);
-    constructgraphB(2,1,10);
-    constructgraphB(2,3,40);    
-    constructgraphB(3,4,2);
-    constructgraphB(4,5,3);
-    constructgraphB(4,6,8);
-    constructgraphB(5,6,2);
+    constructgraphB(0, 1, 20);
+    constructgraphB(0, 3, 20);
+    constructgraphB(2, 1, 10);
+    constructgraphB(2, 3, 40);
+    constructgraphB(3, 4, 2);
+    constructgraphB(4, 5, 3);
+    constructgraphB(4, 6, 8);
+    constructgraphB(5, 6, 2);
 
     //removeedge(3,4);
     // removevertex(3);
@@ -1332,20 +1579,17 @@ void solve(){
     //     }
     // }
     // cout<<kruskal_algo(arr);
-    
+
     // int n=3;
     // vector<int> wells={2,2,2};
-    // vector<vector<int>> pipes={{1,2,1},{2,3,1},{1,3,-1}}; 
+    // vector<vector<int>> pipes={{1,2,1},{2,3,1},{1,3,-1}};
     // cout<<leetcode_1168(n,wells,pipes)<<endl;
     // dijistra_algo(0);
     // prims_algo(0);
     print_AP();
-    
 }
-int main(){
+int main()
+{
     solve();
     return 0;
 }
-
-
-
