@@ -377,7 +377,7 @@ public:
 };
 
 void BFS_01(int s, vector<bool> &vis)
-{ /// Normal BFS
+{ // Normal BFS
     queue<BFSpair> que;
     que.push({s, to_string(s)});
     int dest = 6;

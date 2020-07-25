@@ -204,3 +204,95 @@ vector<int> topKFrequent(vector<int> &nums, int k)
     }
     return ans;
 }
+
+// Leetcode 295. Find Median from Data Stream
+class MedianFinder
+{
+public:
+    /** initialize your data structure here. */
+    priority_queue<int> left;
+    priority_queue<int, vector<int>, greater<int>> right;
+    MedianFinder()
+    {
+    }
+
+    void addNum(int num)
+    {
+        if (left.empty() || num < left.top())
+        {
+            left.push(num);
+        }
+        else
+        {
+            right.push(num);
+        }
+        if (left.size() == right.size() + 2)
+        {
+            right.push(left.top());
+            left.pop();
+        }
+        else if (right.size() > left.size())
+        {
+            left.push(right.top());
+            right.pop();
+        }
+    }
+
+    double findMedian()
+    {
+        if (left.size() == right.size())
+        {
+            return 1.0 * (left.top() + right.top()) / 2;
+        }
+        return left.top();
+    }
+};
+
+//Leetcode 407. Trapping Rain Water II
+int trapRainWater(vector<vector<int>> &height)
+{
+    int n = height.size();
+    int m = height[0].size();
+    typedef pair<int, int> cell;
+    priority_queue<cell, vector<cell>, greater<cell>> pq;
+    vector<vector<bool>> vis(n, vector<bool>(m, false));
+
+    for (int i = 0; i < n; i++)
+    {
+        pq.push({height[i][0], i * m});
+        pq.push({height[i][m - 1], i * m + m - 1});
+        vis[i][0] = vis[i][m - 1] = true;
+    }
+    for (int j = 0; j < m; j++)
+    {
+        pq.push({height[0][j], j});
+        pq.push({height[n - 1][j], (n - 1) * m + j});
+        vis[0][j] = vis[n - 1][j] = true;
+    }
+
+    int maxTillNow = 0;
+    int water = 0;
+    vector<vector<int>> dir = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+    while (pq.size() != 0)
+    {
+        cell idx = pq.top();
+        pq.pop();
+        int r = idx.second / m;
+        int c = idx.second % m;
+        maxTillNow = max(maxTillNow, idx.first);
+        for (int d = 0; d < 4; d++)
+        {
+            int x = r + dir[d][0];
+            int y = c + dir[d][1];
+            if (x >= 0 && y >= 0 && x < n && y < m && !vis[x][y])
+            {
+                pq.push({height[x][y], x * m + y});
+                water += max(0, maxTillNow - height[x][y]);
+                vis[x][y] = true;
+            }
+        }
+    }
+    return water;
+}
+
+//Leetcode 778

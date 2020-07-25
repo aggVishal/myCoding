@@ -1,4 +1,4 @@
-// Linked List Leetcode Quetions
+// Linked List Leetcode Questions
 
 
 public class question {
@@ -274,8 +274,47 @@ public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
     }
 
 
-//leetcode: 445 (imp)
-//leetcode: 2
+//leetcode: 445 Add Two Numbers 2   (imp)
+//leetcode: 2 Add Two Numbers
+    public ListNode  addTwoNumbers(ListNode  l1, ListNode  l2) {
+        int c=0;
+        ListNode *x=l1;
+        ListNode *y=l2;
+        l2=l2->next;
+        l1=l1->next;
+        int a;
+        a=(x->val)+(y->val)+c;
+        ListNode  l=new ListNode(a%10);
+        ListNode head=l;
+        c=a/10;
+        while(l1!=NULL||l2!=NULL){
+            if(l1==NULL&&l2!=NULL){
+                a=l2->val + c;
+                //=l1->next;
+                l2=l2->next;
+            }
+            if(l1!=NULL&&l2==NULL){
+                a=l1->val + c;
+                l1=l1->next;
+                //=l2->next;
+            }
+            if(l1!=NULL&&l2!=NULL){
+                a=l2->val+l1->val+c;
+                l1=l1->next;
+                l2=l2->next;
+            }
+            ListNode newnode=new ListNode(a%10);
+            c=a/10;
+            l->next=newnode;
+            l=newnode;            
+        }
+        if(c!=0)
+        {
+            ListNode newnode=new ListNode(c);
+            l->next=newnode;            
+        }
+        return head;
+    }
 //leetcode: 82
 //leetcode: 92
 
