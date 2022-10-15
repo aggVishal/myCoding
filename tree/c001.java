@@ -1,3 +1,5 @@
+// Tree **********************************************************************************************************************
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Arrays;
@@ -122,15 +124,15 @@ public class c001{
     }
 
     public static boolean rootToNodePath_(Node root,int data,ArrayList<Node> path){
-      if(root==null) return false;
-      if(root.data==data){
-          path.add(root);
-          return true;
-      }
+        if(root==null) return false;
+        if(root.data==data){
+            path.add(root);
+            return true;
+        }
 
-      boolean res = rootToNodePath_(root.left,data,path) || rootToNodePath_(root.right,data,path);
-     if(res) path.add(root);
-      return res;
+        boolean res = rootToNodePath_(root.left,data,path) || rootToNodePath_(root.right,data,path);
+        if(res) path.add(root);
+        return res;
     }
 
     public static ArrayList<Node> rootToNodePath_02(Node root,int data){
@@ -168,6 +170,7 @@ public class c001{
         }
     }
 
+    // Leetcode 236
     public Node lowestCommonAncestor(Node root, int p, int q) {
         ArrayList<Node> path1=new ArrayList<>();
         ArrayList<Node> path2=new ArrayList<>();
@@ -225,6 +228,7 @@ public class c001{
 
     }
 
+    // Leetcode 863
     public static void allNodeKAway(Node root, int target, int K) {
         ArrayList<Node> path=new ArrayList<>();
         rootToNodePath_(root,target,path);

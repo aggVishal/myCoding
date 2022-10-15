@@ -3,7 +3,7 @@
 #include<algorithm>
 #include<unordered_set>
 using namespace std;
-
+ 
 int queen_by_combination_2d(vector<vector<bool>>&boxes,int qpsf,int tnq,int idx,string ans){
     if(qpsf==tnq){
         cout<<ans<<endl;
